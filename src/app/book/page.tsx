@@ -185,6 +185,7 @@ export default function BookingPage() {
                         {availableTimes.map(time => (
                           <Button
                             key={time}
+                            type="button"
                             variant={selectedTime === time ? 'default' : 'outline'}
                             onClick={() => setValue('time', time, { shouldValidate: true })}
                           >
