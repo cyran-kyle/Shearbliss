@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -12,9 +12,9 @@ import {
 import { PlusCircle, Edit, Trash2, Loader2, Shield, AlertTriangle } from 'lucide-react';
 
 import { useAdmin } from '@/hooks/useAdmin';
-import { useUser, useCollection, useFirestore, useMemoFirebase, addDocumentNonBlocking, updateDocumentNonBlocking, deleteDocumentNonBlocking } from '@/firebase';
+import { useUser, useCollection, useFirestore, useMemoFirebase, addDocumentNonBlocking, updateDocumentNonBlocking, deleteDocumentNonBlocking, setDocumentNonBlocking } from '@/firebase';
 import { placeholderImages, type ImagePlaceholder } from '@/lib/placeholder-images';
-import type { Staff, Service } from '@/lib/data';
+import { getStaff, getServices, type Staff, type Service } from '@/lib/data';
 
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
@@ -351,15 +351,46 @@ export default function AdminPage() {
   const { isAdmin, isAdminLoading } = useAdmin();
   const firestore = useFirestore();
   const { toast } = useToast();
+  
+  const [staffSeeded, setStaffSeeded] = useState(false);
+  const [servicesSeeded, setServicesSeeded] = useState(false);
 
   // State for dialogs
   const [dialog, setDialog] = useState<{ type: 'add' | 'edit' | 'delete', collection: 'staff' | 'services', item?: any } | null>(null);
 
-  const staffCollection = useMemoFirebase(() => collection(firestore, 'staff'), [firestore]);
+  const staffCollection = useMemoFirebase(() => firestore ? collection(firestore, 'staff') : null, [firestore]);
   const { data: staff, isLoading: staffLoading } = useCollection<Staff>(staffCollection);
   
-  const servicesCollection = useMemoFirebase(() => collection(firestore, 'services'), [firestore]);
+  const servicesCollection = useMemoFirebase(() => firestore ? collection(firestore, 'services'): null, [firestore]);
   const { data: services, isLoading: servicesLoading } = useCollection<Service>(servicesCollection);
+  
+  const staticStaff = useMemo(() => getStaff(), []);
+  const staticServices = useMemo(() => getServices(), []);
+
+  // Seed staff data if collection is empty
+  useEffect(() => {
+    if (firestore && staffCollection && !staffLoading && staff && staff.length === 0 && !staffSeeded) {
+      console.log('Seeding staff...');
+      staticStaff.forEach(s => {
+        const docRef = doc(firestore, 'staff', s.id);
+        setDocumentNonBlocking(docRef, s, { merge: true });
+      });
+      setStaffSeeded(true);
+    }
+  }, [staff, staffLoading, staffSeeded, firestore, staticStaff, staffCollection]);
+  
+  // Seed services data if collection is empty
+  useEffect(() => {
+    if (firestore && servicesCollection && !servicesLoading && services && services.length === 0 && !servicesSeeded) {
+      console.log('Seeding services...');
+      staticServices.forEach(s => {
+        const docRef = doc(firestore, 'services', s.id);
+        setDocumentNonBlocking(docRef, s, { merge: true });
+      });
+      setServicesSeeded(true);
+    }
+  }, [services, servicesLoading, servicesSeeded, firestore, staticServices, servicesCollection]);
+
 
   useEffect(() => {
     if (!isUserLoading && !user) {
@@ -368,7 +399,7 @@ export default function AdminPage() {
   }, [user, isUserLoading, router]);
 
   const handleDelete = () => {
-    if (!dialog || dialog.type !== 'delete' || !dialog.item) return;
+    if (!dialog || dialog.type !== 'delete' || !dialog.item || !firestore) return;
 
     const docRef = doc(firestore, dialog.collection, dialog.item.id);
     deleteDocumentNonBlocking(docRef);
@@ -412,10 +443,6 @@ export default function AdminPage() {
         <h1 className="text-3xl font-bold flex items-center gap-2"><Shield /> Admin Dashboard</h1>
         <p className="text-muted-foreground">Manage your salon's stylists and services.</p>
       </div>
-      
-      <p className="text-sm bg-accent text-accent-foreground p-3 rounded-md mb-8">
-        <strong>Note:</strong> Changes made here are saved to the database but are not yet reflected on the public-facing pages (Home, Services, Staff). The next step is to connect those pages to Firestore.
-      </p>
 
       <Tabs defaultValue="stylists">
         <TabsList>
@@ -423,7 +450,7 @@ export default function AdminPage() {
           <TabsTrigger value="services">Manage Services</TabsTrigger>
         </TabsList>
         <TabsContent value="stylists">
-          <Card>
+          <Card className="relative">
             <CardHeader>
               <CardTitle>Stylists</CardTitle>
               <CardDescription>Add, edit, or remove stylists.</CardDescription>
@@ -469,7 +496,7 @@ export default function AdminPage() {
           </Card>
         </TabsContent>
         <TabsContent value="services">
-          <Card>
+          <Card className="relative">
             <CardHeader>
               <CardTitle>Services</CardTitle>
               <CardDescription>Add, edit, or remove services.</CardDescription>
