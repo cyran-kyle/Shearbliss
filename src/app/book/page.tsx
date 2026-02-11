@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useForm, FormProvider } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
@@ -15,6 +15,7 @@ import {
   ArrowRight,
   ArrowLeft,
   Loader2,
+  Mail,
 } from 'lucide-react';
 import { format } from 'date-fns';
 
@@ -27,12 +28,16 @@ import { useToast } from '@/hooks/use-toast';
 import { Rating } from '@/components/shared/rating';
 import { useUser } from '@/firebase';
 import { sendEmail } from '@/ai/flows/send-email-flow';
+import { FormField, FormItem, FormLabel, FormControl, FormMessage } from '@/components/ui/form';
+import { Input } from '@/components/ui/input';
 
 const bookingSchema = z.object({
   service: z.string().min(1, 'Please select a service.'),
   staff: z.string().min(1, 'Please select a stylist.'),
   date: z.date({ required_error: 'Please select a date.' }),
   time: z.string().min(1, 'Please select a time.'),
+  name: z.string().min(2, 'Please enter your full name.'),
+  email: z.string().email('Please enter a valid email address.'),
 });
 
 const availableTimes = [
@@ -52,9 +57,24 @@ export default function BookingPage() {
 
   const methods = useForm<z.infer<typeof bookingSchema>>({
     resolver: zodResolver(bookingSchema),
+    defaultValues: {
+      name: '',
+      email: '',
+      service: '',
+      staff: '',
+      time: '',
+    },
   });
 
-  const { watch, setValue, trigger, getValues } = methods;
+  const { watch, setValue, trigger } = methods;
+
+  useEffect(() => {
+    if (user) {
+      setValue('name', user.displayName || '');
+      setValue('email', user.email || '');
+    }
+  }, [user, setValue]);
+
   const selectedServiceId = watch('service');
   const selectedStaffId = watch('staff');
   const selectedDate = watch('date');
@@ -70,15 +90,6 @@ export default function BookingPage() {
     if (step === 3) isValid = await trigger(['date', 'time']);
 
     if (isValid) {
-      if (step === 3 && !user) {
-        toast({
-          variant: 'destructive',
-          title: 'Authentication Required',
-          description: 'Please log in or sign up to complete your booking.',
-        });
-        router.push('/login?redirect=/book');
-        return;
-      }
       setStep(step + 1);
     }
   };
@@ -88,16 +99,6 @@ export default function BookingPage() {
   };
 
   const onSubmit = async (data: z.infer<typeof bookingSchema>) => {
-    if (!user || !user.email) {
-      toast({
-        variant: 'destructive',
-        title: 'Error',
-        description: 'You must be logged in to book an appointment.',
-      });
-      router.push('/login?redirect=/book');
-      return;
-    }
-
     if (!selectedService || !selectedStaff || !selectedDate || !selectedTime) {
        toast({
         variant: 'destructive',
@@ -114,7 +115,7 @@ export default function BookingPage() {
 
     const emailBody = `
       <h1>Your Booking is Confirmed!</h1>
-      <p>Hi there,</p>
+      <p>Hi ${data.name},</p>
       <p>This is a confirmation for your upcoming appointment at Shear Bliss.</p>
       <h2>Appointment Details:</h2>
       <ul>
@@ -130,7 +131,7 @@ export default function BookingPage() {
 
     try {
       await sendEmail({
-        to: user.email,
+        to: data.email,
         subject: 'Your Shear Bliss Appointment Confirmation',
         body: emailBody,
       });
@@ -264,6 +265,34 @@ export default function BookingPage() {
                 {step === 4 && selectedService && selectedStaff && selectedDate && selectedTime && (
                   <div>
                     <h3 className="text-xl font-bold mb-4">Confirm Your Details</h3>
+                    <div className="space-y-4 mb-6">
+                      <FormField
+                          control={methods.control}
+                          name="name"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>Full Name</FormLabel>
+                              <FormControl>
+                                <Input placeholder="e.g., Jane Doe" {...field} />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                         <FormField
+                          control={methods.control}
+                          name="email"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>Email Address</FormLabel>
+                              <FormControl>
+                                <Input type="email" placeholder="e.g., you@example.com" {...field} />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                    </div>
                     <Card>
                       <CardContent className="p-6 space-y-4">
                         <div className="flex justify-between">
