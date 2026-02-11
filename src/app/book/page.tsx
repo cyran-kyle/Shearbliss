@@ -173,8 +173,9 @@ export default function BookingPage() {
                     <div>
                       <Calendar
                         mode="single"
+                        required
                         selected={selectedDate}
-                        onSelect={(date) => setValue('date', date as Date, { shouldValidate: true })}
+                        onSelect={(date) => setValue('date', date, { shouldValidate: true })}
                         disabled={(date) => date < new Date(new Date().setHours(0,0,0,0))}
                         className="rounded-md border mx-auto"
                       />
