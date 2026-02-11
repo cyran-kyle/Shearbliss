@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Menu, Scissors, User, LogOut } from 'lucide-react';
+import { Menu, Scissors, User, LogOut, Shield } from 'lucide-react';
 import { useState } from 'react';
 import { getAuth, signOut } from 'firebase/auth';
 
@@ -19,6 +19,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
+import { useAdmin } from '@/hooks/useAdmin';
 
 const navLinks = [
   { href: '/', label: 'Home' },
@@ -31,6 +32,7 @@ export function Header() {
   const pathname = usePathname();
   const [isSheetOpen, setSheetOpen] = useState(false);
   const { user, isUserLoading } = useUser();
+  const { isAdmin } = useAdmin();
   const auth = getAuth();
 
   const handleLogout = () => {
@@ -69,6 +71,7 @@ export function Header() {
                 <DropdownMenuTrigger asChild>
                   <Button variant="ghost" className="relative h-8 w-8 rounded-full">
                     <Avatar className="h-8 w-8">
+                       <AvatarImage src={user.photoURL || undefined} alt={user.email || ''} />
                        <AvatarFallback>{user.email?.[0].toUpperCase()}</AvatarFallback>
                     </Avatar>
                   </Button>
@@ -86,6 +89,11 @@ export function Header() {
                   <DropdownMenuItem asChild>
                     <Link href="/dashboard"><User className="mr-2 h-4 w-4" />Dashboard</Link>
                   </DropdownMenuItem>
+                  {isAdmin && (
+                     <DropdownMenuItem asChild>
+                      <Link href="/admin"><Shield className="mr-2 h-4 w-4" />Admin</Link>
+                    </DropdownMenuItem>
+                  )}
                   <DropdownMenuSeparator />
                   <DropdownMenuItem onClick={handleLogout}>
                     <LogOut className="mr-2 h-4 w-4" />
