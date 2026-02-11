@@ -1,0 +1,257 @@
+'use client';
+
+import { useState } from 'react';
+import { useForm, FormProvider } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import * as z from 'zod';
+import { useRouter } from 'next/navigation';
+import Image from 'next/image';
+import {
+  Calendar as CalendarIcon,
+  Clock,
+  User,
+  Scissors,
+  Check,
+  ArrowRight,
+  ArrowLeft,
+  Loader2,
+} from 'lucide-react';
+import { format } from 'date-fns';
+
+import { cn } from '@/lib/utils';
+import { getServices, getStaff, type Service, type Staff } from '@/lib/data';
+import { placeholderImages } from '@/lib/placeholder-images';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Calendar } from '@/components/ui/calendar';
+import { useToast } from '@/hooks/use-toast';
+import { Rating } from '@/components/shared/rating';
+
+const bookingSchema = z.object({
+  service: z.string().min(1, 'Please select a service.'),
+  staff: z.string().min(1, 'Please select a stylist.'),
+  date: z.date({ required_error: 'Please select a date.' }),
+  time: z.string().min(1, 'Please select a time.'),
+});
+
+const availableTimes = [
+  '09:00 AM', '10:00 AM', '11:00 AM', '12:00 PM',
+  '01:00 PM', '02:00 PM', '03:00 PM', '04:00 PM', '05:00 PM',
+];
+
+export default function BookingPage() {
+  const router = useRouter();
+  const { toast } = useToast();
+  const [step, setStep] = useState(1);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const services = getServices();
+  const staffMembers = getStaff();
+
+  const methods = useForm<z.infer<typeof bookingSchema>>({
+    resolver: zodResolver(bookingSchema),
+  });
+
+  const { watch, setValue, trigger, getValues } = methods;
+  const selectedServiceId = watch('service');
+  const selectedStaffId = watch('staff');
+  const selectedDate = watch('date');
+  const selectedTime = watch('time');
+
+  const selectedService = services.find(s => s.id === selectedServiceId);
+  const selectedStaff = staffMembers.find(s => s.id === selectedStaffId);
+
+  const handleNextStep = async () => {
+    let isValid = false;
+    if (step === 1) isValid = await trigger('service');
+    if (step === 2) isValid = await trigger('staff');
+    if (step === 3) isValid = await trigger(['date', 'time']);
+
+    if (isValid) {
+      setStep(step + 1);
+    }
+  };
+
+  const handlePrevStep = () => {
+    setStep(step - 1);
+  };
+
+  const onSubmit = (data: z.infer<typeof bookingSchema>) => {
+    setIsSubmitting(true);
+    console.log('Booking submitted:', data);
+    
+    // Simulate API call
+    setTimeout(() => {
+      setIsSubmitting(false);
+      toast({
+        title: 'Booking Confirmed!',
+        description: 'Your appointment has been successfully scheduled.',
+      });
+      router.push('/confirmation');
+    }, 1500);
+  };
+  
+  const steps = [
+    { id: 1, name: 'Select Service', icon: Scissors },
+    { id: 2, name: 'Select Stylist', icon: User },
+    { id: 3, name: 'Select Date & Time', icon: CalendarIcon },
+    { id: 4, name: 'Confirm Booking', icon: Check },
+  ];
+
+  return (
+    <div className="container mx-auto px-4 py-12">
+      <div className="max-w-4xl mx-auto">
+        <h1 className="text-center text-4xl font-extrabold mb-2">Book Your Appointment</h1>
+        <p className="text-center text-muted-foreground mb-8">Follow the steps to schedule your visit.</p>
+
+        <div className="mb-8">
+            <ol className="flex items-center w-full">
+                {steps.map((s, index) => (
+                    <li key={s.id} className={cn(
+                        "flex w-full items-center",
+                        index !== steps.length - 1 && "after:content-[''] after:w-full after:h-1 after:border-b after:border-4 after:inline-block",
+                        step > s.id ? 'after:border-primary' : 'after:border-border',
+                    )}>
+                        <div className="flex items-center justify-center w-10 h-10 rounded-full lg:h-12 lg:w-12 shrink-0" style={{
+                            backgroundColor: step >= s.id ? 'hsl(var(--primary))' : 'hsl(var(--border))',
+                            color: step >= s.id ? 'hsl(var(--primary-foreground))' : 'hsl(var(--muted-foreground))'
+                        }}>
+                            <s.icon className="w-5 h-5 lg:w-6 lg:h-6" />
+                        </div>
+                    </li>
+                ))}
+            </ol>
+        </div>
+
+        <FormProvider {...methods}>
+          <form onSubmit={methods.handleSubmit(onSubmit)}>
+            <Card className="shadow-lg">
+              <CardHeader>
+                <CardTitle className="text-2xl">{steps.find(s => s.id === step)?.name}</CardTitle>
+              </CardHeader>
+              <CardContent className="min-h-[300px]">
+                {step === 1 && (
+                  <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                    {services.map(service => (
+                      <Card
+                        key={service.id}
+                        className={cn(
+                          'cursor-pointer transition-all',
+                          selectedServiceId === service.id ? 'ring-2 ring-primary' : 'hover:shadow-md'
+                        )}
+                        onClick={() => setValue('service', service.id, { shouldValidate: true })}
+                      >
+                        <CardContent className="p-4 text-center">
+                          <h3 className="font-semibold">{service.name}</h3>
+                          <p className="text-sm text-primary">${service.price}</p>
+                        </CardContent>
+                      </Card>
+                    ))}
+                  </div>
+                )}
+                {step === 2 && (
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    {staffMembers.map(staff => (
+                      <Card
+                        key={staff.id}
+                        className={cn(
+                          'cursor-pointer transition-all text-center',
+                          selectedStaffId === staff.id ? 'ring-2 ring-primary' : 'hover:shadow-md'
+                        )}
+                        onClick={() => setValue('staff', staff.id, { shouldValidate: true })}
+                      >
+                        <CardContent className="p-4">
+                          <Image src={placeholderImages.find(p => p.id === staff.imageId)?.imageUrl || ''} alt={staff.name} width={80} height={80} className="rounded-full mx-auto mb-2" data-ai-hint={staff.imageHint} />
+                          <h3 className="font-semibold">{staff.name}</h3>
+                          <Rating rating={staff.rating} className="justify-center mt-1" />
+                        </CardContent>
+                      </Card>
+                    ))}
+                  </div>
+                )}
+                {step === 3 && (
+                   <div className="grid md:grid-cols-2 gap-8">
+                    <div>
+                      <Calendar
+                        mode="single"
+                        selected={selectedDate}
+                        onSelect={(date) => setValue('date', date as Date, { shouldValidate: true })}
+                        disabled={(date) => date < new Date(new Date().setHours(0,0,0,0))}
+                        className="rounded-md border mx-auto"
+                      />
+                    </div>
+                    <div>
+                      <h3 className="font-semibold mb-2 text-center md:text-left">Available Times</h3>
+                      <div className="grid grid-cols-3 gap-2">
+                        {availableTimes.map(time => (
+                          <Button
+                            key={time}
+                            variant={selectedTime === time ? 'default' : 'outline'}
+                            onClick={() => setValue('time', time, { shouldValidate: true })}
+                          >
+                            {time}
+                          </Button>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                )}
+                {step === 4 && selectedService && selectedStaff && selectedDate && selectedTime && (
+                  <div>
+                    <h3 className="text-xl font-bold mb-4">Confirm Your Details</h3>
+                    <Card>
+                      <CardContent className="p-6 space-y-4">
+                        <div className="flex justify-between">
+                          <span className="text-muted-foreground">Service:</span>
+                          <span className="font-semibold">{selectedService.name}</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="text-muted-foreground">Stylist:</span>
+                          <span className="font-semibold">{selectedStaff.name}</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="text-muted-foreground">Date:</span>
+                          <span className="font-semibold">{format(selectedDate, 'PPP')}</span>
+                        </div>
+                         <div className="flex justify-between">
+                          <span className="text-muted-foreground">Time:</span>
+                          <span className="font-semibold">{selectedTime}</span>
+                        </div>
+                        <div className="flex justify-between text-lg font-bold text-primary pt-4 border-t">
+                          <span>Total:</span>
+                          <span>${selectedService.price.toFixed(2)}</span>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+
+            <div className="flex justify-between mt-8">
+              {step > 1 ? (
+                <Button type="button" variant="outline" onClick={handlePrevStep}>
+                  <ArrowLeft className="mr-2 h-4 w-4" /> Previous
+                </Button>
+              ) : <div></div>}
+              {step < 4 ? (
+                <Button type="button" onClick={handleNextStep}>
+                  Next <ArrowRight className="ml-2 h-4 w-4" />
+                </Button>
+              ) : (
+                <Button type="submit" disabled={isSubmitting}>
+                  {isSubmitting ? (
+                    <>
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      Confirming...
+                    </>
+                  ) : 'Confirm Booking'}
+                </Button>
+              )}
+            </div>
+          </form>
+        </FormProvider>
+      </div>
+    </div>
+  );
+}
