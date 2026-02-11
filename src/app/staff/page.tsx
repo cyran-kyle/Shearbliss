@@ -8,7 +8,6 @@ import * as z from 'zod';
 import { Star, User, MessageSquare, PlusCircle } from 'lucide-react';
 
 import { getStaff, type Staff as StaffType, type StaffReview } from '@/lib/data';
-import { placeholderImages } from '@/lib/placeholder-images';
 import {
   Accordion,
   AccordionContent,
@@ -147,11 +146,11 @@ export default function StaffPage() {
                   <div className="flex gap-6 items-center w-full">
                     <div className="relative h-24 w-24 shrink-0 rounded-full overflow-hidden ring-2 ring-primary/20">
                       <Image
-                        src={placeholderImages.find((img) => img.id === staff.imageId)?.imageUrl || ''}
+                        src={staff.imageUrl}
                         alt={staff.name}
                         fill
                         className="object-cover"
-                        data-ai-hint={staff.imageHint}
+                        data-ai-hint="stylist portrait"
                       />
                     </div>
                     <div className="flex-grow">

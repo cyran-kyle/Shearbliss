@@ -20,7 +20,6 @@ import { format } from 'date-fns';
 
 import { cn } from '@/lib/utils';
 import { getServices, getStaff, type Service, type Staff } from '@/lib/data';
-import { placeholderImages } from '@/lib/placeholder-images';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Calendar } from '@/components/ui/calendar';
@@ -161,7 +160,7 @@ export default function BookingPage() {
                         onClick={() => setValue('staff', staff.id, { shouldValidate: true })}
                       >
                         <CardContent className="p-4">
-                          <Image src={placeholderImages.find(p => p.id === staff.imageId)?.imageUrl || ''} alt={staff.name} width={80} height={80} className="rounded-full mx-auto mb-2" data-ai-hint={staff.imageHint} />
+                          <Image src={staff.imageUrl} alt={staff.name} width={80} height={80} className="rounded-full mx-auto mb-2 object-cover" />
                           <h3 className="font-semibold">{staff.name}</h3>
                           <Rating rating={staff.rating} className="justify-center mt-1" />
                         </CardContent>

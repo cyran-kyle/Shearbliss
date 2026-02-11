@@ -13,7 +13,6 @@ import { PlusCircle, Edit, Trash2, Loader2, Shield, AlertTriangle } from 'lucide
 
 import { useAdmin } from '@/hooks/useAdmin';
 import { useUser, useCollection, useFirestore, useMemoFirebase, addDocumentNonBlocking, updateDocumentNonBlocking, deleteDocumentNonBlocking, setDocumentNonBlocking } from '@/firebase';
-import { placeholderImages, type ImagePlaceholder } from '@/lib/placeholder-images';
 import { getStaff, getServices, type Staff, type Service } from '@/lib/data';
 
 import { Button } from '@/components/ui/button';
@@ -38,13 +37,6 @@ import {
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
-import {
   Table,
   TableBody,
   TableCell,
@@ -61,7 +53,7 @@ const staffSchema = z.object({
   name: z.string().min(2, 'Name must be at least 2 characters.'),
   specialization: z.string().min(2, 'Specialization is required.'),
   experience: z.string().min(1, 'Experience is required.'),
-  imageId: z.string().min(1, 'Please select an image.'),
+  imageUrl: z.string().min(1, 'An image is required.'),
 });
 
 const serviceSchema = z.object({
@@ -69,7 +61,7 @@ const serviceSchema = z.object({
   description: z.string().min(10, 'Description must be at least 10 characters.'),
   price: z.coerce.number().min(1, 'Price must be greater than 0.'),
   duration: z.coerce.number().min(5, 'Duration must be at least 5 minutes.'),
-  imageId: z.string().min(1, 'Please select an image.'),
+  imageUrl: z.string().min(1, 'An image is required.'),
 });
 
 // Helper component for the Stylist Form
@@ -90,17 +82,14 @@ function StylistForm({
       name: staff?.name || '',
       specialization: staff?.specialization || '',
       experience: staff?.experience || '',
-      imageId: staff?.imageId || '',
+      imageUrl: staff?.imageUrl || '',
     },
   });
 
   const { isSubmitting } = form.formState;
-  
-  const image = placeholderImages.find(p => p.id === form.watch('imageId'));
 
   async function onSubmit(values: z.infer<typeof staffSchema>) {
-    const imageHint = placeholderImages.find(p => p.id === values.imageId)?.imageHint || '';
-    const data = {...values, imageHint, rating: staff?.rating || 0, reviewCount: staff?.reviewCount || 0, reviews: staff?.reviews || [] };
+    const data = {...values, rating: staff?.rating || 0, reviewCount: staff?.reviewCount || 0, reviews: staff?.reviews || [] };
 
     try {
       if (staff) {
@@ -164,23 +153,27 @@ function StylistForm({
         />
         <FormField
           control={form.control}
-          name="imageId"
+          name="imageUrl"
           render={({ field }) => (
             <FormItem>
               <FormLabel>Image</FormLabel>
-              <Select onValueChange={field.onChange} defaultValue={field.value}>
-                <FormControl>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select an image" />
-                  </SelectTrigger>
-                </FormControl>
-                <SelectContent>
-                  {placeholderImages.filter(p => p.imageHint?.includes('stylist') || p.imageHint?.includes('hairdresser') || p.imageHint?.includes('barber')).map((p: ImagePlaceholder) => (
-                    <SelectItem key={p.id} value={p.id}>{p.description}</SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-              {image && <Image src={image.imageUrl} alt={image.description} width={100} height={100} className="rounded-md mt-2" />}
+              <FormControl>
+                <Input
+                  type="file"
+                  accept="image/*"
+                  onChange={(e) => {
+                    const file = e.target.files?.[0];
+                    if (file) {
+                      const reader = new FileReader();
+                      reader.onloadend = () => {
+                        form.setValue('imageUrl', reader.result as string, { shouldValidate: true });
+                      };
+                      reader.readAsDataURL(file);
+                    }
+                  }}
+                />
+              </FormControl>
+               {form.watch('imageUrl') && <Image src={form.watch('imageUrl')} alt="Preview" width={100} height={100} className="rounded-md mt-2 object-cover" />}
               <FormMessage />
             </FormItem>
           )}
@@ -219,27 +212,22 @@ function ServiceForm({
       description: service?.description || '',
       price: service?.price || 0,
       duration: service?.duration || 0,
-      imageId: service?.imageId || '',
+      imageUrl: service?.imageUrl || '',
     },
   });
 
   const { isSubmitting } = form.formState;
 
-  const image = placeholderImages.find(p => p.id === form.watch('imageId'));
-
   async function onSubmit(values: z.infer<typeof serviceSchema>) {
-    const imageHint = placeholderImages.find(p => p.id === values.imageId)?.imageHint || '';
-    const data = {...values, imageHint };
-
     try {
       if (service) {
         // Update existing service
         const serviceDocRef = doc(firestore, 'services', service.id);
-        updateDocumentNonBlocking(serviceDocRef, data);
+        updateDocumentNonBlocking(serviceDocRef, values);
         toast({ title: 'Service Updated', description: `${values.name} has been updated.` });
       } else {
         // Add new service
-        addDocumentNonBlocking(servicesCollection, data);
+        addDocumentNonBlocking(servicesCollection, values);
         toast({ title: 'Service Added', description: `${values.name} has been added.` });
       }
       onFinished();
@@ -308,23 +296,27 @@ function ServiceForm({
         </div>
         <FormField
           control={form.control}
-          name="imageId"
+          name="imageUrl"
           render={({ field }) => (
             <FormItem>
               <FormLabel>Image</FormLabel>
-              <Select onValueChange={field.onChange} defaultValue={field.value}>
-                <FormControl>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select an image" />
-                  </SelectTrigger>
-                </FormControl>
-                <SelectContent>
-                  {placeholderImages.filter(p => p.id.startsWith('service-')).map((p: ImagePlaceholder) => (
-                    <SelectItem key={p.id} value={p.id}>{p.description}</SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-               {image && <Image src={image.imageUrl} alt={image.description} width={100} height={100} className="rounded-md mt-2" />}
+              <FormControl>
+                 <Input
+                  type="file"
+                  accept="image/*"
+                  onChange={(e) => {
+                    const file = e.target.files?.[0];
+                    if (file) {
+                      const reader = new FileReader();
+                      reader.onloadend = () => {
+                        form.setValue('imageUrl', reader.result as string, { shouldValidate: true });
+                      };
+                      reader.readAsDataURL(file);
+                    }
+                  }}
+                />
+              </FormControl>
+              {form.watch('imageUrl') && <Image src={form.watch('imageUrl')} alt="Preview" width={100} height={100} className="rounded-md mt-2 object-cover" />}
               <FormMessage />
             </FormItem>
           )}

@@ -53,11 +53,11 @@ export default function Home() {
                 <CardHeader className="p-0">
                   <div className="relative h-48 w-full">
                     <Image
-                      src={placeholderImages.find((img) => img.id === service.imageId)?.imageUrl || ''}
+                      src={service.imageUrl}
                       alt={service.name}
                       fill
                       className="object-cover"
-                      data-ai-hint={service.imageHint}
+                      data-ai-hint="hair service"
                     />
                   </div>
                 </CardHeader>
@@ -96,11 +96,11 @@ export default function Home() {
                 <CardContent className="p-6">
                   <div className="relative h-32 w-32 rounded-full mx-auto mb-4 overflow-hidden ring-4 ring-primary/20 group-hover:ring-primary/40 transition-all">
                     <Image
-                      src={placeholderImages.find((img) => img.id === staff.imageId)?.imageUrl || ''}
+                      src={staff.imageUrl}
                       alt={staff.name}
                       fill
                       className="object-cover"
-                      data-ai-hint={staff.imageHint}
+                      data-ai-hint="stylist portrait"
                     />
                   </div>
                   <h3 className="text-xl font-bold">{staff.name}</h3>

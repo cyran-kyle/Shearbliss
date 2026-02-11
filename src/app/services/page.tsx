@@ -2,7 +2,6 @@ import Image from 'next/image';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { getServices } from '@/lib/data';
-import { placeholderImages } from '@/lib/placeholder-images';
 import Link from 'next/link';
 
 export default function ServicesPage() {
@@ -24,11 +23,11 @@ export default function ServicesPage() {
               <CardHeader className="p-0">
                 <div className="relative h-56 w-full">
                   <Image
-                    src={placeholderImages.find((img) => img.id === service.imageId)?.imageUrl || ''}
+                    src={service.imageUrl}
                     alt={service.name}
                     fill
                     className="object-cover"
-                    data-ai-hint={service.imageHint}
+                    data-ai-hint="hair service"
                   />
                 </div>
               </CardHeader>
