@@ -1,0 +1,406 @@
+{
+  "entities": {
+    "Appointment": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "Appointment",
+      "type": "object",
+      "description": "Represents a scheduled appointment at the hair salon.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the Appointment entity."
+        },
+        "userId": {
+          "type": "string",
+          "description": "Reference to User. (Relationship: User 1:N Appointment)"
+        },
+        "staffId": {
+          "type": "string",
+          "description": "Reference to Staff. (Relationship: Staff 1:N Appointment)"
+        },
+        "serviceId": {
+          "type": "string",
+          "description": "Reference to Service. (Relationship: Service 1:N Appointment)"
+        },
+        "startTime": {
+          "type": "string",
+          "description": "The date and time the appointment is scheduled to begin.",
+          "format": "date-time"
+        },
+        "endTime": {
+          "type": "string",
+          "description": "The date and time the appointment is scheduled to end.",
+          "format": "date-time"
+        },
+        "status": {
+          "type": "string",
+          "description": "The status of the appointment (e.g., scheduled, completed, cancelled)."
+        },
+        "notes": {
+          "type": "string",
+          "description": "Any notes or special requests for the appointment."
+        }
+      },
+      "required": [
+        "id",
+        "userId",
+        "staffId",
+        "serviceId",
+        "startTime",
+        "endTime",
+        "status"
+      ]
+    },
+    "Staff": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "Staff",
+      "type": "object",
+      "description": "Represents a staff member at the hair salon.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the Staff entity."
+        },
+        "firstName": {
+          "type": "string",
+          "description": "The first name of the staff member."
+        },
+        "lastName": {
+          "type": "string",
+          "description": "The last name of the staff member."
+        },
+        "specialization": {
+          "type": "string",
+          "description": "The staff member's area of expertise."
+        },
+        "experienceYears": {
+          "type": "number",
+          "description": "The number of years of experience the staff member has."
+        },
+        "photoUrl": {
+          "type": "string",
+          "description": "URL of the staff member's photo.",
+          "format": "uri"
+        },
+        "bio": {
+          "type": "string",
+          "description": "A short biography of the staff member."
+        }
+      },
+      "required": [
+        "id",
+        "firstName",
+        "lastName",
+        "specialization",
+        "experienceYears"
+      ]
+    },
+    "Service": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "Service",
+      "type": "object",
+      "description": "Represents a service offered by the hair salon.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the Service entity."
+        },
+        "name": {
+          "type": "string",
+          "description": "The name of the service."
+        },
+        "description": {
+          "type": "string",
+          "description": "A description of the service."
+        },
+        "durationMinutes": {
+          "type": "number",
+          "description": "The duration of the service in minutes."
+        },
+        "price": {
+          "type": "number",
+          "description": "The price of the service."
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "description",
+        "durationMinutes",
+        "price"
+      ]
+    },
+    "QueueEntry": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "QueueEntry",
+      "type": "object",
+      "description": "Represents an entry in the live queue system.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the QueueEntry entity."
+        },
+        "userId": {
+          "type": "string",
+          "description": "Reference to User. (Relationship: User 1:N QueueEntry)"
+        },
+        "appointmentId": {
+          "type": "string",
+          "description": "Reference to Appointment. (Relationship: Appointment 1:N QueueEntry)"
+        },
+        "position": {
+          "type": "number",
+          "description": "The user's position in the queue."
+        },
+        "estimatedWaitTime": {
+          "type": "number",
+          "description": "The estimated waiting time in minutes."
+        },
+        "timestamp": {
+          "type": "string",
+          "description": "The time the user entered the queue.",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "id",
+        "userId",
+        "appointmentId",
+        "position",
+        "estimatedWaitTime",
+        "timestamp"
+      ]
+    },
+    "User": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "User",
+      "type": "object",
+      "description": "Represents a user of the hair salon booking application. Note: Authentication details are not included here, assuming an external authentication system.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the User entity."
+        },
+        "firstName": {
+          "type": "string",
+          "description": "The user's first name."
+        },
+        "lastName": {
+          "type": "string",
+          "description": "The user's last name."
+        },
+        "email": {
+          "type": "string",
+          "description": "The user's email address.",
+          "format": "email"
+        },
+        "phone": {
+          "type": "string",
+          "description": "The user's phone number."
+        },
+        "bookingIds": {
+          "type": "array",
+          "description": "References to Bookings. (Relationship: User 1:N Booking)",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "required": [
+        "id",
+        "firstName",
+        "lastName",
+        "email"
+      ]
+    },
+    "Admin": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "Admin",
+      "type": "object",
+      "description": "Represents an administrator of the hair salon booking application. Note: Authentication details are not included here, assuming an external authentication system.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the Admin entity."
+        },
+        "username": {
+          "type": "string",
+          "description": "The administrator's username."
+        },
+        "email": {
+          "type": "string",
+          "description": "The administrator's email address.",
+          "format": "email"
+        }
+      },
+      "required": [
+        "id",
+        "username",
+        "email"
+      ]
+    },
+    "Rating": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "Rating",
+      "type": "object",
+      "description": "Represents a rating given by a user to a staff member.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the Rating entity."
+        },
+        "userId": {
+          "type": "string",
+          "description": "Reference to User. (Relationship: User 1:N Rating)"
+        },
+        "staffId": {
+          "type": "string",
+          "description": "Reference to Staff. (Relationship: Staff 1:N Rating)"
+        },
+        "ratingValue": {
+          "type": "number",
+          "description": "The rating given by the user (e.g., 1-5 stars)."
+        },
+        "comment": {
+          "type": "string",
+          "description": "The user's comment about the staff member."
+        },
+        "timestamp": {
+          "type": "string",
+          "description": "The time the rating was submitted.",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "id",
+        "userId",
+        "staffId",
+        "ratingValue",
+        "timestamp"
+      ]
+    }
+  },
+  "auth": {
+    "providers": [
+      "password",
+      "anonymous"
+    ]
+  },
+  "firestore": {
+    "structure": [
+      {
+        "path": "/users/{userId}",
+        "definition": {
+          "entityName": "User",
+          "schema": {
+            "$ref": "#/backend/entities/User"
+          },
+          "description": "Stores user profiles. Uses path-based ownership for user data.",
+          "params": [
+            {
+              "name": "userId",
+              "description": "The unique identifier of the user."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/staff/{staffId}",
+        "definition": {
+          "entityName": "Staff",
+          "schema": {
+            "$ref": "#/backend/entities/Staff"
+          },
+          "description": "Stores staff member profiles. Accessible to all users for viewing, and to admins for modification.",
+          "params": [
+            {
+              "name": "staffId",
+              "description": "The unique identifier of the staff member."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/services/{serviceId}",
+        "definition": {
+          "entityName": "Service",
+          "schema": {
+            "$ref": "#/backend/entities/Service"
+          },
+          "description": "Stores the list of available services. Publicly readable, and admin-modifiable.",
+          "params": [
+            {
+              "name": "serviceId",
+              "description": "The unique identifier of the service."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/appointments/{appointmentId}",
+        "definition": {
+          "entityName": "Appointment",
+          "schema": {
+            "$ref": "#/backend/entities/Appointment"
+          },
+          "description": "Stores appointment data. Includes denormalized 'userId' field for authorization independence.",
+          "params": [
+            {
+              "name": "appointmentId",
+              "description": "The unique identifier of the appointment."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/queue_entries/{queueEntryId}",
+        "definition": {
+          "entityName": "QueueEntry",
+          "schema": {
+            "$ref": "#/backend/entities/QueueEntry"
+          },
+          "description": "Stores queue entries. Includes denormalized 'userId' and 'appointmentId' fields for authorization independence.",
+          "params": [
+            {
+              "name": "queueEntryId",
+              "description": "The unique identifier of the queue entry."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/ratings/{ratingId}",
+        "definition": {
+          "entityName": "Rating",
+          "schema": {
+            "$ref": "#/backend/entities/Rating"
+          },
+          "description": "Stores staff ratings. Includes denormalized 'userId' and 'staffId' fields for authorization independence.",
+          "params": [
+            {
+              "name": "ratingId",
+              "description": "The unique identifier of the rating."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/roles_admin/{userId}",
+        "definition": {
+          "entityName": "Admin",
+          "schema": {
+            "$ref": "#/backend/entities/Admin"
+          },
+          "description": "Indicates that the user is an admin. Existence of the document grants admin privileges.",
+          "params": [
+            {
+              "name": "userId",
+              "description": "The unique identifier of the user."
+            }
+          ]
+        }
+      }
+    ],
+    "reasoning": "The Firestore data structure is designed to ensure security, scalability, and ease of debugging, following the principles of Authorization Independence, Clarity of Intent, DBAC, and QAPs. Authorization independence is achieved through denormalization. Specifically, the `members` map for collaborative data is copied to subcollections where needed, eliminating the need for `get()` calls in security rules and enabling atomic operations. Structural Segregation is employed to maintain a homogeneous security posture within collections. Access Modeling uses consistent patterns for authorization: Path-Based ownership for private data (e.g., `/users/{userId}/appointments`), and Membership Maps for collaborative data. Finally, Explicit State Modeling uses dedicated `status` fields for clarity, while predictable schemas avoid dynamic keys.\n\n*   `/users/{userId}`: Stores general user information. This collection uses path-based ownership and is used to store data private to the user.\n*   `/staff/{staffId}`: Stores staff member profiles. Accessible to all users for viewing, and to admins for modification.\n*   `/services/{serviceId}`: Stores the list of available services. Publicly readable, and admin-modifiable.\n*   `/appointments/{appointmentId}`: Stores all appointment data. The appointment document denormalizes the `userId` and `staffId` fields to be able to easily query all appointments for a given user or staff member. This also makes it possible to use security rules for appointments based on the `userId`.\n*   `/queue_entries/{queueEntryId}`: Stores queue entries. The `userId` and `appointmentId` are denormalized here for easy querying and security rule creation.\n*   `/ratings/{ratingId}`: Stores staff ratings. The `userId` and `staffId` are denormalized for querying and securing the data.\n*   `/roles_admin/{userId}`: A document in this collection indicates that the user is an admin. The existence of the document is sufficient for authorization."
+  }
+}

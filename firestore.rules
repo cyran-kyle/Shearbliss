@@ -1,0 +1,177 @@
+/**
+ * Core Philosophy: This ruleset enforces a security model where users have strict ownership of their personal data (profiles, appointments, ratings), while admins retain control over public, system-wide data (staff, services). Public data is generally readable by anyone to facilitate browsing, but can only be modified by authorized administrators.
+ *
+ * Data Structure: The data is organized into flat, top-level collections. Authorization relies on denormalized 'userId' fields within documents (e.g., in appointments, queue_entries, ratings) to enable fast, independent security checks without costly database queries. Administrative privileges are managed through a dedicated `/roles_admin` collection, where the existence of a document for a given user ID grants them admin rights.
+ *
+ * Key Security Decisions:
+ * - Admin Access: A user is considered an admin if a document with their UID exists in the `/roles_admin` collection. This provides a clear and scalable way to manage roles.
+ * - Public vs. Private Data: Collections like `/staff` and `/services` are publicly readable to allow users to browse options before booking. All other user-generated content is private by default and accessible only to the owner or an admin.
+ * - User Data Privacy: Direct listing of the `/users` collection is disallowed to protect user privacy. Users can only access their own user document.
+ * - Admin Capabilities: Admins have read access to all user appointments and queue entries for management purposes and full write access to core business data like staff and services.
+ *
+ * Denormalization for Authorization: To create performant and secure rules, documents that require ownership checks (like appointments and ratings) store the owner's `userId` directly. This avoids slow and expensive `get()` calls to other documents during rule evaluation. For example, an `appointment` document contains a `userId`, allowing a simple check like `resource.data.userId == request.auth.uid`.
+ *
+ * Structural Segregation: User-specific data is kept separate from public data by using distinct top-level collections (e.g., `/users/{userId}` vs `/staff/{staffId}`). This ensures that security rules for one collection do not inadvertently affect another and makes list operations much safer and more efficient.
+ */
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ----------------------------------------------------------------------
+    // Helper Functions
+    // ----------------------------------------------------------------------
+
+    /**
+     * Checks if the user is authenticated.
+     */
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    /**
+     * Checks if the authenticated user's UID matches the provided userId.
+     * Used for path-based ownership rules.
+     */
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+
+    /**
+     * Checks if the user has an admin role.
+     * Admin status is granted by the existence of a document in the /roles_admin collection.
+     */
+    function isAdmin() {
+      return isSignedIn() && exists(/databases/$(database)/documents/roles_admin/$(request.auth.uid));
+    }
+
+    /**
+     * Checks if the incoming data for a new document has the owner's UID set correctly.
+     * This enforces relational integrity on creation.
+     */
+    function isCreatingOwnDocument() {
+      return isSignedIn() && request.resource.data.userId == request.auth.uid;
+    }
+
+    /**
+     * Checks if the user is the owner of an existing document.
+     * This is used for update and delete operations.
+     */
+    function isOwnerOfExistingDoc() {
+      return resource != null && isOwner(resource.data.userId);
+    }
+    
+    /**
+     * Validates that a field, once set, cannot be changed.
+     * Critical for preventing ownership hijacking.
+     */
+    function isImmutable(fieldName) {
+      return request.resource.data[fieldName] == resource.data[fieldName];
+    }
+
+    // ----------------------------------------------------------------------
+    // Collection Rules
+    // ----------------------------------------------------------------------
+
+    /**
+     * @description Manages user profile data.
+     * @path /users/{userId}
+     * @allow (create) An authenticated user can create their own user profile document.
+     * @deny (list) No user can list all documents in the /users collection.
+     * @principle Restricts access to a user's own data tree and prevents user enumeration.
+     */
+    match /users/{userId} {
+      allow get: if isOwner(userId) || isAdmin();
+      allow list: if false;
+      allow create: if isOwner(userId) && request.resource.data.id == userId;
+      allow update: if isOwner(userId) && resource != null && isImmutable('id');
+      allow delete: if isOwner(userId) && resource != null;
+    }
+
+    /**
+     * @description Stores staff member profiles, viewable by anyone.
+     * @path /staff/{staffId}
+     * @allow (get) Any user, including unauthenticated ones, can view staff profiles.
+     * @deny (create) A regular authenticated user cannot create a new staff profile.
+     * @principle Provides public read access for browsing, with write access restricted to administrators.
+     */
+    match /staff/{staffId} {
+      allow get, list: if true;
+      allow create: if isAdmin();
+      allow update: if isAdmin() && resource != null;
+      allow delete: if isAdmin() && resource != null;
+    }
+
+    /**
+     * @description Stores salon services, viewable by anyone.
+     * @path /services/{serviceId}
+     * @allow (get) Any user, including unauthenticated ones, can view service details.
+     * @deny (update) A regular authenticated user cannot modify a service.
+     * @principle Provides public read access for browsing, with write access restricted to administrators.
+     */
+    match /services/{serviceId} {
+      allow get, list: if true;
+      allow create: if isAdmin();
+      allow update: if isAdmin() && resource != null;
+      allow delete: if isAdmin() && resource != null;
+    }
+
+    /**
+     * @description Stores all appointments. Users manage their own, admins can view all.
+     * @path /appointments/{appointmentId}
+     * @allow (create) An authenticated user can create an appointment for themselves.
+     * @deny (update) A user cannot update an appointment belonging to another user.
+     * @principle Enforces document ownership for writes, while allowing admins read-only access for oversight.
+     */
+    match /appointments/{appointmentId} {
+      allow get: if isOwner(resource.data.userId) || isAdmin();
+      allow list: if isAdmin();
+      allow create: if isCreatingOwnDocument();
+      allow update: if isOwnerOfExistingDoc() && isImmutable('userId');
+      allow delete: if isOwnerOfExistingDoc();
+    }
+
+    /**
+     * @description Manages the live queue. Users can create and view their own entry. Admins manage the whole queue.
+     * @path /queue_entries/{queueEntryId}
+     * @allow (get) A user can view their own position in the queue.
+     * @deny (delete) A user cannot remove another user's entry from the queue.
+     * @principle Enforces ownership for user-facing reads, while granting full control to admins for queue management.
+     */
+    match /queue_entries/{queueEntryId} {
+      allow get: if isOwner(resource.data.userId) || isAdmin();
+      allow list: if isAdmin();
+      allow create: if isCreatingOwnDocument();
+      allow update: if isAdmin() && resource != null;
+      allow delete: if isAdmin() && resource != null;
+    }
+
+    /**
+     * @description Stores user ratings for staff. Ratings are public, but only the creator can edit or delete them.
+     * @path /ratings/{ratingId}
+     * @allow (create) A logged-in user can create a rating.
+     * @deny (update) A user cannot modify a rating left by someone else.
+     * @principle Implements a "Public Read with Owner-Only Writes" pattern, common for reviews and comments.
+     */
+    match /ratings/{ratingId} {
+      allow get, list: if true;
+      allow create: if isCreatingOwnDocument();
+      allow update: if isOwnerOfExistingDoc() && isImmutable('userId');
+      allow delete: if isOwnerOfExistingDoc();
+    }
+
+    /**
+     * @description Manages admin roles. Existence of a document here grants admin privileges.
+     * @path /roles_admin/{userId}
+     * @allow (get) An admin can check if another user is also an admin.
+     * @deny (create) A non-admin user cannot grant themselves or others admin rights.
+     * @principle Secures administrative roles by restricting modification of the roles collection to other admins.
+     */
+    match /roles_admin/{userId} {
+      allow get, list: if isAdmin();
+      allow create: if isAdmin();
+      allow update: if isAdmin() && resource != null;
+      allow delete: if isAdmin() && resource != null;
+    }
+
+  }
+}
