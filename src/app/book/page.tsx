@@ -9,7 +9,7 @@ import Image from 'next/image';
 import {
   Calendar as CalendarIcon,
   Clock,
-  User,
+  User as UserIcon,
   Scissors,
   Check,
   ArrowRight,
@@ -25,6 +25,8 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Calendar } from '@/components/ui/calendar';
 import { useToast } from '@/hooks/use-toast';
 import { Rating } from '@/components/shared/rating';
+import { useUser } from '@/firebase';
+import { sendEmail } from '@/ai/flows/send-email-flow';
 
 const bookingSchema = z.object({
   service: z.string().min(1, 'Please select a service.'),
@@ -41,6 +43,7 @@ const availableTimes = [
 export default function BookingPage() {
   const router = useRouter();
   const { toast } = useToast();
+  const { user } = useUser();
   const [step, setStep] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -67,6 +70,15 @@ export default function BookingPage() {
     if (step === 3) isValid = await trigger(['date', 'time']);
 
     if (isValid) {
+      if (step === 3 && !user) {
+        toast({
+          variant: 'destructive',
+          title: 'Authentication Required',
+          description: 'Please log in or sign up to complete your booking.',
+        });
+        router.push('/login?redirect=/book');
+        return;
+      }
       setStep(step + 1);
     }
   };
@@ -75,24 +87,76 @@ export default function BookingPage() {
     setStep(step - 1);
   };
 
-  const onSubmit = (data: z.infer<typeof bookingSchema>) => {
+  const onSubmit = async (data: z.infer<typeof bookingSchema>) => {
+    if (!user || !user.email) {
+      toast({
+        variant: 'destructive',
+        title: 'Error',
+        description: 'You must be logged in to book an appointment.',
+      });
+      router.push('/login?redirect=/book');
+      return;
+    }
+
+    if (!selectedService || !selectedStaff || !selectedDate || !selectedTime) {
+       toast({
+        variant: 'destructive',
+        title: 'Error',
+        description: 'Please complete all booking steps.',
+      });
+      return;
+    }
+
     setIsSubmitting(true);
+
+    // TODO: In a real app, save the booking to Firestore here.
     console.log('Booking submitted:', data);
-    
-    // Simulate API call
-    setTimeout(() => {
-      setIsSubmitting(false);
+
+    const emailBody = `
+      <h1>Your Booking is Confirmed!</h1>
+      <p>Hi there,</p>
+      <p>This is a confirmation for your upcoming appointment at Shear Bliss.</p>
+      <h2>Appointment Details:</h2>
+      <ul>
+        <li><strong>Service:</strong> ${selectedService.name}</li>
+        <li><strong>Stylist:</strong> ${selectedStaff.name}</li>
+        <li><strong>Date:</strong> ${format(selectedDate, 'PPP')}</li>
+        <li><strong>Time:</strong> ${selectedTime}</li>
+        <li><strong>Price:</strong> $${selectedService.price.toFixed(2)}</li>
+      </ul>
+      <p>We look forward to seeing you!</p>
+      <p><em>- The Shear Bliss Team</em></p>
+    `;
+
+    try {
+      await sendEmail({
+        to: user.email,
+        subject: 'Your Shear Bliss Appointment Confirmation',
+        body: emailBody,
+      });
+
       toast({
         title: 'Booking Confirmed!',
-        description: 'Your appointment has been successfully scheduled.',
+        description: 'Your appointment has been successfully scheduled. A confirmation email has been sent.',
       });
       router.push('/confirmation');
-    }, 1500);
+    } catch (error) {
+      console.error('Failed to send confirmation email:', error);
+      toast({
+        variant: 'destructive',
+        title: 'Booking Confirmed, but...',
+        description: 'Your appointment was booked, but we could not send a confirmation email.',
+      });
+       // Still redirect to confirmation, as the booking itself is "successful" for the user.
+      router.push('/confirmation');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
   
   const steps = [
     { id: 1, name: 'Select Service', icon: Scissors },
-    { id: 2, name: 'Select Stylist', icon: User },
+    { id: 2, name: 'Select Stylist', icon: UserIcon },
     { id: 3, name: 'Select Date & Time', icon: CalendarIcon },
     { id: 4, name: 'Confirm Booking', icon: Check },
   ];
@@ -175,7 +239,7 @@ export default function BookingPage() {
                         mode="single"
                         required
                         selected={selectedDate}
-                        onSelect={(date) => setValue('date', date, { shouldValidate: true })}
+                        onSelect={(date) => date && setValue('date', date, { shouldValidate: true })}
                         disabled={(date) => date < new Date(new Date().setHours(0,0,0,0))}
                         className="rounded-md border mx-auto"
                       />
