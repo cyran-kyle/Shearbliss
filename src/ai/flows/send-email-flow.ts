@@ -9,14 +9,14 @@
 import { ai } from '@/ai/genkit';
 import { z } from 'zod';
 
-export const SendEmailInputSchema = z.object({
+const SendEmailInputSchema = z.object({
   to: z.string().email().describe("The recipient's email address."),
   subject: z.string().describe('The subject of the email.'),
   body: z.string().describe('The HTML body of the email.'),
 });
 export type SendEmailInput = z.infer<typeof SendEmailInputSchema>;
 
-export const SendEmailOutputSchema = z.object({
+const SendEmailOutputSchema = z.object({
   success: z.boolean(),
   message: z.string(),
 });
