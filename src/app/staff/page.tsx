@@ -164,13 +164,15 @@ export default function StaffPage() {
                   <AccordionTrigger className="w-full p-6 text-left hover:no-underline [&[data-state=open]>svg]:text-primary">
                     <div className="flex gap-6 items-center w-full">
                       <div className="relative h-24 w-24 shrink-0 rounded-full overflow-hidden ring-2 ring-primary/20">
-                        <Image
-                          src={staff.imageUrl}
-                          alt={staff.name}
-                          fill
-                          className="object-cover"
-                          data-ai-hint="stylist portrait"
-                        />
+                        {staff.imageUrl && (
+                          <Image
+                            src={staff.imageUrl}
+                            alt={staff.name}
+                            fill
+                            className="object-cover"
+                            data-ai-hint="stylist portrait"
+                          />
+                        )}
                       </div>
                       <div className="flex-grow">
                         <h2 className="text-2xl font-bold">{staff.name}</h2>

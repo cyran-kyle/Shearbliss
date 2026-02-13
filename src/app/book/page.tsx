@@ -247,7 +247,9 @@ export default function BookingPage() {
                         onClick={() => setValue('staff', staff.id, { shouldValidate: true })}
                       >
                         <CardContent className="p-4">
-                          <Image src={staff.imageUrl} alt={staff.name} width={80} height={80} className="rounded-full mx-auto mb-2 object-cover" />
+                          {staff.imageUrl && (
+                            <Image src={staff.imageUrl} alt={staff.name} width={80} height={80} className="rounded-full mx-auto mb-2 object-cover" />
+                          )}
                           <h3 className="font-semibold">{staff.name}</h3>
                           <Rating rating={staff.rating} className="justify-center mt-1" />
                         </CardContent>

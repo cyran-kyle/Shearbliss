@@ -48,13 +48,15 @@ export default function ServicesPage() {
               <Card key={service.id} className="flex flex-col overflow-hidden shadow-lg hover:shadow-2xl transition-shadow duration-300">
                 <CardHeader className="p-0">
                   <div className="relative h-56 w-full">
-                    <Image
-                      src={service.imageUrl}
-                      alt={service.name}
-                      fill
-                      className="object-cover"
-                      data-ai-hint="hair service"
-                    />
+                    {service.imageUrl && (
+                      <Image
+                        src={service.imageUrl}
+                        alt={service.name}
+                        fill
+                        className="object-cover"
+                        data-ai-hint="hair service"
+                      />
+                    )}
                   </div>
                 </CardHeader>
                 <CardContent className="p-6 flex-grow">

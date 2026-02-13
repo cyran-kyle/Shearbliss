@@ -25,17 +25,21 @@ export default function Home() {
   const featuredServices = services ? services.slice(0, 3) : [];
   const featuredStaff = staff ? staff.slice(0, 3) : [];
 
+  const heroImage = placeholderImages.find((img) => img.id === 'hero-1');
+
   return (
     <div className="flex flex-col min-h-screen">
       <section className="relative w-full h-[60vh] md:h-[80vh] flex items-center justify-center text-center">
-        <Image
-          src={placeholderImages.find((img) => img.id === 'hero-1')?.imageUrl || ''}
-          alt="Modern hair salon interior"
-          fill
-          className="object-cover"
-          priority
-          data-ai-hint="salon interior"
-        />
+        {heroImage?.imageUrl && (
+          <Image
+            src={heroImage.imageUrl}
+            alt="Modern hair salon interior"
+            fill
+            className="object-cover"
+            priority
+            data-ai-hint="salon interior"
+          />
+        )}
         <div className="absolute inset-0 bg-black/50" />
         <div className="relative z-10 p-4 text-white animate-fade-in-up">
           <h1 className="text-4xl md:text-6xl font-extrabold tracking-tight">
@@ -80,13 +84,15 @@ export default function Home() {
                 <Card key={service.id} className="overflow-hidden transform hover:-translate-y-2 transition-transform duration-300 ease-in-out shadow-lg hover:shadow-2xl">
                   <CardHeader className="p-0">
                     <div className="relative h-48 w-full">
-                      <Image
-                        src={service.imageUrl}
-                        alt={service.name}
-                        fill
-                        className="object-cover"
-                        data-ai-hint="hair service"
-                      />
+                      {service.imageUrl && (
+                        <Image
+                          src={service.imageUrl}
+                          alt={service.name}
+                          fill
+                          className="object-cover"
+                          data-ai-hint="hair service"
+                        />
+                      )}
                     </div>
                   </CardHeader>
                   <CardContent className="p-6">
@@ -136,13 +142,15 @@ export default function Home() {
                 <Card key={staff.id} className="text-center group overflow-hidden transform hover:-translate-y-2 transition-transform duration-300 ease-in-out shadow-lg hover:shadow-2xl">
                   <CardContent className="p-6">
                     <div className="relative h-32 w-32 rounded-full mx-auto mb-4 overflow-hidden ring-4 ring-primary/20 group-hover:ring-primary/40 transition-all">
-                      <Image
-                        src={staff.imageUrl}
-                        alt={staff.name}
-                        fill
-                        className="object-cover"
-                        data-ai-hint="stylist portrait"
-                      />
+                      {staff.imageUrl && (
+                        <Image
+                          src={staff.imageUrl}
+                          alt={staff.name}
+                          fill
+                          className="object-cover"
+                          data-ai-hint="stylist portrait"
+                        />
+                      )}
                     </div>
                     <h3 className="text-xl font-bold">{staff.name}</h3>
                     <p className="text-primary font-medium">{staff.specialization}</p>
