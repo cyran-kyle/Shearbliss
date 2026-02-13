@@ -61,7 +61,7 @@ const services: Service[] = [
   },
   {
     id: 'ser-4',
-    name: 'Acrylic Nails',
+    name: 'Acrylic',
     description: 'Get a stunning and durable full set of acrylic nails.',
     price: 70,
     duration: 90,
@@ -93,7 +93,7 @@ const services: Service[] = [
   },
   {
     id: 'ser-8',
-    name: 'Press On Nails',
+    name: 'Press On Nail',
     description: 'Quick and stylish press-on nail application for any occasion.',
     price: 25,
     duration: 30,
@@ -109,7 +109,7 @@ const services: Service[] = [
   },
   {
     id: 'ser-10',
-    name: 'Color Touch-up',
+    name: 'Touch Up',
     description: 'Root touch-up to maintain your vibrant hair color.',
     price: 60,
     duration: 60,
@@ -117,7 +117,7 @@ const services: Service[] = [
   },
   {
     id: 'ser-11',
-    name: 'Hair Washing',
+    name: 'Washing of Hair',
     description: 'A professional and relaxing hair wash and conditioning.',
     price: 25,
     duration: 30,
@@ -125,7 +125,7 @@ const services: Service[] = [
   },
   {
     id: 'ser-12',
-    name: 'Sleek Ponytail',
+    name: 'Pony Tail',
     description: 'Get a perfectly sleek and stylish ponytail for a sophisticated look.',
     price: 55,
     duration: 45,
@@ -141,7 +141,7 @@ const services: Service[] = [
   },
   {
     id: 'ser-14',
-    name: 'Hair Straightening',
+    name: 'Staighting of Hair',
     description: 'A silk press or flat iron service for beautifully straight hair.',
     price: 75,
     duration: 90,
@@ -165,7 +165,7 @@ const services: Service[] = [
   },
   {
     id: 'ser-17',
-    name: 'Eyelash Extension',
+    name: 'Eye Lush Extension',
     description: 'A full set of classic eyelash extensions for a stunning look.',
     price: 120,
     duration: 120,
