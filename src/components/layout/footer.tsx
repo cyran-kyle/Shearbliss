@@ -32,7 +32,7 @@ export function Footer() {
               <Link href="#" aria-label="Twitter"><Twitter className="h-5 w-5 hover:text-primary transition-colors" /></Link>
             </div>
             <p className="text-sm text-muted-foreground">123 Beauty Lane, Glamour City</p>
-            <p className="text-sm text-muted-foreground">(123) 456-7890</p>
+            <p className="text-sm text-muted-foreground">+233243333371</p>
           </div>
         </div>
         <div className="mt-8 border-t pt-4 text-center text-xs text-muted-foreground">
