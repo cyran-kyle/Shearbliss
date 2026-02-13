@@ -73,7 +73,7 @@ const services: Service[] = [
     description: 'Creation of a custom wig tailored to your specifications.',
     price: 300,
     duration: 240,
-    imageUrl: 'https://images.unsplash.com/photo-1596767352399-2c77b4515c0a?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHx3aWclMjBtYWtpbmd8ZW58MHx8fHwxNzA3ODA5ODg2fDA&ixlib=rb-4.1.0&q=80&w=1080',
+    imageUrl: 'https://images.unsplash.com/photo-1620912189895-137a67302484?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHx3aWclMjBtYWtpbmclMjBwbGVhc3VyZXxlbnwwfHx8fDE3MTM3MTU4MTR8MA&ixlib=rb-4.1.0&q=80&w=1080',
   },
   {
     id: 'ser-7',
@@ -81,7 +81,7 @@ const services: Service[] = [
     description: 'Professional fitting and styling of your wig for a flawless look.',
     price: 100,
     duration: 75,
-    imageUrl: 'https://images.unsplash.com/photo-1621602123714-43d4d436c84c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw0fHx3aWclMjBpbnN0YWxsYXRpb258ZW58MHx8fHwxNzA3ODA5OTE4fDA&ixlib=rb-4.1.0&q=80&w=1080',
+    imageUrl: 'https://images.unsplash.com/photo-1631631880373-6174b85c17d7?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHx3aWclMjBpbnN0YWxsYXRpb24lMjBkYXJrJTIwc2tpbnxlbnwwfHx8fDE3MTM3MTU2ODR8MA&ixlib=rb-4.1.0&q=80&w=1080',
   },
   {
     id: 'ser-8',
@@ -105,7 +105,7 @@ const services: Service[] = [
     description: 'Root touch-up to maintain your vibrant hair color.',
     price: 60,
     duration: 60,
-    imageUrl: 'https://images.unsplash.com/photo-1615217896001-35a77519a716?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxoYWlyJTIwcm9vdCUyMHRvdWNodXB8ZW58MHx8fHwxNzA3ODEwMDQ0fDA&ixlib=rb-4.1.0&q=80&w=1080',
+    imageUrl: 'https://images.unsplash.com/photo-1598391295988-786830948b88?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxoYWlyJTIwY29sb3IlMjB0b3VjaCUyMHVwJTIwZGFyayUyMHNraW58ZW58MHx8fHwxNzEzNzE0NjQzfDA&ixlib=rb-4.1.0&q=80&w=1080',
   },
   {
     id: 'ser-11',
@@ -149,11 +149,11 @@ const services: Service[] = [
   },
   {
     id: 'ser-16',
-    name: 'Ear Piercing',
-    description: 'Safe and sterile ear piercing service.',
+    name: 'Body Piercing',
+    description: 'Safe and sterile body piercing service, including ears, nose, and more.',
     price: 40,
     duration: 20,
-    imageUrl: 'https://images.unsplash.com/photo-1601836109154-b5a805f5f6a9?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxlYXIlMjBwaWVyY2luZ3xlbnwwfHx8fDE3MDc4MTAyNDd8MA&ixlib=rb-4.1.0&q=80&w=1080',
+    imageUrl: 'https://images.unsplash.com/photo-1618230193496-4a4b43c5b3a4?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxuYXNlJTIwcGllcmNpbmclMjBkYXJrJTIwc2tpbnxlbnwwfHx8fDE3MTM3MTUwODB8MA&ixlib=rb-4.1.0&q=80&w=1080',
   },
   {
     id: 'ser-17',
