@@ -371,10 +371,10 @@ export default function AdminPage() {
     }
   }, [staff, staffLoading, staffSeeded, firestore, staticStaff, staffCollection]);
   
-  // Seed services data if collection is empty
+  // Seed services data to ensure it's up to date
   useEffect(() => {
-    if (firestore && servicesCollection && !servicesLoading && services && services.length === 0 && !servicesSeeded) {
-      console.log('Seeding services...');
+    if (firestore && servicesCollection && !servicesLoading && !servicesSeeded) {
+      console.log('Updating services to latest version...');
       staticServices.forEach(s => {
         const docRef = doc(firestore, 'services', s.id);
         setDocumentNonBlocking(docRef, s, { merge: true });
