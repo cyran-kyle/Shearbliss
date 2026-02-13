@@ -1,15 +1,15 @@
 'use client';
 
 import Image from 'next/image';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
-import { Star, User, MessageSquare, PlusCircle } from 'lucide-react';
-import { collection } from 'firebase/firestore';
+import { Star, User, MessageSquare, PlusCircle, Loader2 } from 'lucide-react';
+import { collection, doc, runTransaction } from 'firebase/firestore';
 
-import { type Staff as StaffType } from '@/lib/data';
-import { useCollection, useFirestore, useMemoFirebase } from '@/firebase';
+import { type Staff as StaffType, type StaffReview } from '@/lib/data';
+import { useCollection, useFirestore, useMemoFirebase, useUser } from '@/firebase';
 import {
   Accordion,
   AccordionContent,
@@ -50,18 +50,75 @@ const reviewSchema = z.object({
 
 function AddReviewForm({ staffId, onReviewAdded }: { staffId: string; onReviewAdded: () => void }) {
   const { toast } = useToast();
+  const firestore = useFirestore();
+  const { user } = useUser();
+
   const form = useForm<z.infer<typeof reviewSchema>>({
     resolver: zodResolver(reviewSchema),
     defaultValues: { name: '', rating: 5, comment: '' },
   });
 
-  function onSubmit(values: z.infer<typeof reviewSchema>) {
-    console.log({ staffId, ...values });
-    toast({
-      title: 'Review Submitted!',
-      description: 'Thank you for your feedback.',
-    });
-    onReviewAdded();
+  const { isSubmitting } = form.formState;
+
+  useEffect(() => {
+    if (user?.displayName) {
+      form.setValue('name', user.displayName);
+    }
+  }, [user, form]);
+
+  async function onSubmit(values: z.infer<typeof reviewSchema>) {
+    if (!firestore) return;
+
+    const staffDocRef = doc(firestore, 'staff', staffId);
+
+    try {
+      await runTransaction(firestore, async (transaction) => {
+        const staffDoc = await transaction.get(staffDocRef);
+        if (!staffDoc.exists()) {
+          throw new Error('Stylist not found.');
+        }
+
+        const staffData = staffDoc.data() as StaffType;
+
+        const newReview: StaffReview = {
+          id: new Date().toISOString(),
+          userName: values.name,
+          rating: values.rating,
+          comment: values.comment,
+          createdAt: new Date().toLocaleDateString('en-US', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric',
+          }),
+        };
+
+        const existingReviews = staffData.reviews || [];
+        const newReviews = [...existingReviews, newReview];
+        const newReviewCount = newReviews.length;
+
+        const totalRating = newReviews.reduce((sum, review) => sum + review.rating, 0);
+        const newAverageRating = totalRating / newReviewCount;
+
+        transaction.update(staffDocRef, {
+          reviews: newReviews,
+          reviewCount: newReviewCount,
+          rating: newAverageRating,
+        });
+      });
+
+      toast({
+        title: 'Review Submitted!',
+        description: 'Thank you for your feedback.',
+      });
+      onReviewAdded();
+    } catch (error) {
+      console.error('Failed to submit review:', error);
+      toast({
+        variant: 'destructive',
+        title: 'Submission Failed',
+        description: 'Could not save your review. Please try again.',
+      });
+    }
   }
 
   return (
@@ -117,7 +174,10 @@ function AddReviewForm({ staffId, onReviewAdded }: { staffId: string; onReviewAd
           )}
         />
         <DialogFooter>
-          <Button type="submit">Submit Review</Button>
+          <Button type="submit" disabled={isSubmitting}>
+            {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+            Submit Review
+          </Button>
         </DialogFooter>
       </form>
     </Form>
@@ -205,7 +265,7 @@ export default function StaffPage() {
                           </Dialog>
                         </div>
                         <div className="space-y-4 max-h-60 overflow-y-auto pr-2">
-                          {staff.reviews.length > 0 ? staff.reviews.map((review) => (
+                          {staff.reviews && staff.reviews.length > 0 ? staff.reviews.map((review) => (
                             <div key={review.id} className="flex gap-4">
                               <Avatar>
                                 <AvatarFallback>{review.userName.charAt(0)}</AvatarFallback>
@@ -219,7 +279,7 @@ export default function StaffPage() {
                                 <p className="text-sm text-muted-foreground">{review.comment}</p>
                               </div>
                             </div>
-                          )) : (
+                          )).reverse() : (
                             <p className="text-sm text-muted-foreground text-center py-4">Be the first to review {staff.name}!</p>
                           )}
                         </div>

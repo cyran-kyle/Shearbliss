@@ -1,3 +1,11 @@
+import { placeholderImages } from './placeholder-images';
+
+const getPlaceholderImageUrl = (id: string, fallbackSeed?: string) => {
+  const image = placeholderImages.find((img) => img.id === id);
+  return image?.imageUrl || `https://picsum.photos/seed/${fallbackSeed || id}/600/400`;
+};
+
+
 export type Service = {
   id: string;
   name: string;
@@ -33,7 +41,7 @@ const services: Service[] = [
     description: 'A revitalizing treatment to nourish and restore your hair\'s health and shine.',
     price: 50,
     duration: 45,
-    imageUrl: 'https://picsum.photos/seed/ser-1/600/400',
+    imageUrl: getPlaceholderImageUrl('ser-1'),
   },
   {
     id: 'ser-2',
@@ -41,7 +49,7 @@ const services: Service[] = [
     description: 'Relax and rejuvenate with a full pedicure service, including polish.',
     price: 40,
     duration: 60,
-    imageUrl: 'https://picsum.photos/seed/ser-2/600/400',
+    imageUrl: getPlaceholderImageUrl('ser-2'),
   },
   {
     id: 'ser-3',
@@ -49,7 +57,7 @@ const services: Service[] = [
     description: 'Classic manicure service to keep your hands looking their best.',
     price: 30,
     duration: 45,
-    imageUrl: 'https://picsum.photos/seed/ser-3/600/400',
+    imageUrl: getPlaceholderImageUrl('ser-3'),
   },
   {
     id: 'ser-4',
@@ -57,7 +65,7 @@ const services: Service[] = [
     description: 'Get a stunning and durable full set of acrylic nails.',
     price: 70,
     duration: 90,
-    imageUrl: 'https://picsum.photos/seed/ser-4/600/400',
+    imageUrl: getPlaceholderImageUrl('ser-4'),
   },
   {
     id: 'ser-5',
@@ -65,7 +73,7 @@ const services: Service[] = [
     description: 'A deep-cleansing and relaxing facial to refresh your skin.',
     price: 80,
     duration: 60,
-    imageUrl: 'https://picsum.photos/seed/ser-5/600/400',
+    imageUrl: getPlaceholderImageUrl('ser-5'),
   },
   {
     id: 'ser-6',
@@ -73,7 +81,7 @@ const services: Service[] = [
     description: 'Creation of a custom wig tailored to your specifications.',
     price: 300,
     duration: 240,
-    imageUrl: 'https://picsum.photos/seed/ser-6/600/400',
+    imageUrl: getPlaceholderImageUrl('ser-6', 'wig-making-generic'),
   },
   {
     id: 'ser-7',
@@ -81,7 +89,7 @@ const services: Service[] = [
     description: 'Professional fitting and styling of your wig for a flawless look.',
     price: 100,
     duration: 75,
-    imageUrl: 'https://picsum.photos/seed/ser-7/600/400',
+    imageUrl: getPlaceholderImageUrl('ser-7', 'wig-install-generic'),
   },
   {
     id: 'ser-8',
@@ -89,7 +97,7 @@ const services: Service[] = [
     description: 'Quick and stylish press-on nail application for any occasion.',
     price: 25,
     duration: 30,
-    imageUrl: 'https://picsum.photos/seed/ser-8/600/400',
+    imageUrl: getPlaceholderImageUrl('ser-8', 'press-on-generic'),
   },
   {
     id: 'ser-9',
@@ -97,7 +105,7 @@ const services: Service[] = [
     description: 'A quick nail shaping and fresh polish application.',
     price: 20,
     duration: 25,
-    imageUrl: 'https://picsum.photos/seed/ser-9/600/400',
+    imageUrl: getPlaceholderImageUrl('ser-9', 'polish-generic'),
   },
   {
     id: 'ser-10',
@@ -105,7 +113,7 @@ const services: Service[] = [
     description: 'Root touch-up to maintain your vibrant hair color.',
     price: 60,
     duration: 60,
-    imageUrl: 'https://picsum.photos/seed/ser-10/600/400',
+    imageUrl: getPlaceholderImageUrl('ser-10', 'color-touchup-generic'),
   },
   {
     id: 'ser-11',
@@ -113,7 +121,7 @@ const services: Service[] = [
     description: 'A professional and relaxing hair wash and conditioning.',
     price: 25,
     duration: 30,
-    imageUrl: 'https://picsum.photos/seed/ser-11/600/400',
+    imageUrl: getPlaceholderImageUrl('ser-11', 'hair-wash-generic'),
   },
   {
     id: 'ser-12',
@@ -121,7 +129,7 @@ const services: Service[] = [
     description: 'Get a perfectly sleek and stylish ponytail for a sophisticated look.',
     price: 55,
     duration: 45,
-    imageUrl: 'https://picsum.photos/seed/ser-12/600/400',
+    imageUrl: getPlaceholderImageUrl('ser-12', 'ponytail-generic'),
   },
   {
     id: 'ser-13',
@@ -129,7 +137,7 @@ const services: Service[] = [
     description: 'Classic and elegant finger wave styling for a timeless look.',
     price: 65,
     duration: 60,
-    imageUrl: 'https://picsum.photos/seed/ser-13/600/400',
+    imageUrl: getPlaceholderImageUrl('ser-13', 'finger-waves-generic'),
   },
   {
     id: 'ser-14',
@@ -137,7 +145,7 @@ const services: Service[] = [
     description: 'A silk press or flat iron service for beautifully straight hair.',
     price: 75,
     duration: 90,
-    imageUrl: 'https://picsum.photos/seed/ser-14/600/400',
+    imageUrl: getPlaceholderImageUrl('ser-14', 'straightening-generic'),
   },
   {
     id: 'ser-15',
@@ -145,7 +153,7 @@ const services: Service[] = [
     description: 'Professional eyebrow waxing to shape and define your brows.',
     price: 20,
     duration: 20,
-    imageUrl: 'https://picsum.photos/seed/ser-15/600/400',
+    imageUrl: getPlaceholderImageUrl('ser-15', 'waxing-generic'),
   },
   {
     id: 'ser-16',
@@ -153,7 +161,7 @@ const services: Service[] = [
     description: 'Safe and sterile body piercing service, including ears, nose, and more.',
     price: 40,
     duration: 20,
-    imageUrl: 'https://picsum.photos/seed/ser-16/600/400',
+    imageUrl: getPlaceholderImageUrl('ser-16', 'piercing-generic'),
   },
   {
     id: 'ser-17',
@@ -161,7 +169,7 @@ const services: Service[] = [
     description: 'A full set of classic eyelash extensions for a stunning look.',
     price: 120,
     duration: 120,
-    imageUrl: 'https://picsum.photos/seed/ser-17/600/400',
+    imageUrl: getPlaceholderImageUrl('ser-17', 'eyelash-generic'),
   },
   {
     id: 'ser-18',
@@ -169,7 +177,7 @@ const services: Service[] = [
     description: 'Transform your look with a vibrant, all-over color.',
     price: 150,
     duration: 120,
-    imageUrl: 'https://picsum.photos/seed/ser-18/600/400',
+    imageUrl: getPlaceholderImageUrl('ser-18', 'coloring-generic'),
   },
 ];
 
@@ -182,7 +190,7 @@ const staff: Staff[] = [
     experience: '10 years',
     rating: 4.9,
     reviewCount: 124,
-    imageUrl: 'https://picsum.photos/seed/staff-1/400/400',
+    imageUrl: getPlaceholderImageUrl('staff-1'),
     reviews: [
       { id: 'rev-1', userName: 'Emily R.', rating: 5, comment: 'Olivia is a miracle worker! My color has never looked better.', createdAt: '2 weeks ago' },
       { id: 'rev-2', userName: 'Jessica P.', rating: 5, comment: 'So knowledgeable and friendly. Highly recommend!', createdAt: '1 month ago' },
@@ -195,7 +203,7 @@ const staff: Staff[] = [
     experience: '12 years',
     rating: 4.8,
     reviewCount: 98,
-    imageUrl: 'https://picsum.photos/seed/staff-2/400/400',
+    imageUrl: getPlaceholderImageUrl('staff-2'),
     reviews: [
       { id: 'rev-3', userName: 'Michael B.', rating: 5, comment: 'Ben always gives the perfect cut. True professional.', createdAt: '3 weeks ago' },
     ],
@@ -207,7 +215,7 @@ const staff: Staff[] = [
     experience: '8 years',
     rating: 4.9,
     reviewCount: 152,
-    imageUrl: 'https://picsum.photos/seed/staff-3/400/400',
+    imageUrl: getPlaceholderImageUrl('staff-3'),
     reviews: [
       { id: 'rev-4', userName: 'Chloe T.', rating: 5, comment: 'My braids are absolutely stunning. Sophia is an artist!', createdAt: '5 days ago' },
       { id: 'rev-5', userName: 'Ava G.', rating: 5, comment: 'I loved my wedding hairstyle, it was perfect!', createdAt: '2 months ago' },
@@ -220,7 +228,7 @@ const staff: Staff[] = [
     experience: '7 years',
     rating: 4.7,
     reviewCount: 85,
-    imageUrl: 'https://picsum.photos/seed/staff-4/400/400',
+    imageUrl: getPlaceholderImageUrl('staff-4'),
     reviews: [
       { id: 'rev-6', userName: 'David S.', rating: 5, comment: 'Liam is the best for modern men\'s cuts. Great attention to detail.', createdAt: '1 week ago' },
     ],
