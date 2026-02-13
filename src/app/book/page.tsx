@@ -18,7 +18,7 @@ import {
   Mail,
 } from 'lucide-react';
 import { format } from 'date-fns';
-import { collection } from 'firebase/firestore';
+import { collection, addDoc } from 'firebase/firestore';
 
 import { cn } from '@/lib/utils';
 import { type Service, type Staff } from '@/lib/data';
@@ -106,7 +106,7 @@ export default function BookingPage() {
   };
 
   const onSubmit = async (data: z.infer<typeof bookingSchema>) => {
-    if (!selectedService || !selectedStaff || !selectedDate || !selectedTime) {
+    if (!selectedService || !selectedStaff || !selectedDate || !selectedTime || !firestore) {
        toast({
         variant: 'destructive',
         title: 'Error',
@@ -117,26 +117,38 @@ export default function BookingPage() {
 
     setIsSubmitting(true);
 
-    // TODO: In a real app, save the booking to Firestore here.
-    console.log('Booking submitted:', data);
-
-    const emailBody = `
-      <h1>Your Booking is Confirmed!</h1>
-      <p>Hi ${data.name},</p>
-      <p>This is a confirmation for your upcoming appointment at Shear Bliss.</p>
-      <h2>Appointment Details:</h2>
-      <ul>
-        <li><strong>Service:</strong> ${selectedService.name}</li>
-        <li><strong>Stylist:</strong> ${selectedStaff.name}</li>
-        <li><strong>Date:</strong> ${format(selectedDate, 'PPP')}</li>
-        <li><strong>Time:</strong> ${selectedTime}</li>
-        <li><strong>Price:</strong> $${selectedService.price.toFixed(2)}</li>
-      </ul>
-      <p>We look forward to seeing you!</p>
-      <p><em>- The Shear Bliss Team</em></p>
-    `;
-
     try {
+      const appointmentsCollection = collection(firestore, 'appointments');
+      await addDoc(appointmentsCollection, {
+        userId: user?.uid || null,
+        serviceId: selectedService.id,
+        serviceName: selectedService.name,
+        staffId: selectedStaff.id,
+        staffName: selectedStaff.name,
+        startTime: new Date(`${format(selectedDate, 'yyyy-MM-dd')}T${selectedTime.replace(' AM', ':00').replace(' PM', ':00')}`), // a bit naive
+        endTime: new Date(new Date(`${format(selectedDate, 'yyyy-MM-dd')}T${selectedTime.replace(' AM', ':00').replace(' PM', ':00')}`).getTime() + selectedService.duration * 60000),
+        clientName: data.name,
+        clientEmail: data.email,
+        status: 'scheduled',
+        price: selectedService.price,
+      });
+
+      const emailBody = `
+        <h1>Your Booking is Confirmed!</h1>
+        <p>Hi ${data.name},</p>
+        <p>This is a confirmation for your upcoming appointment at Shear Bliss.</p>
+        <h2>Appointment Details:</h2>
+        <ul>
+          <li><strong>Service:</strong> ${selectedService.name}</li>
+          <li><strong>Stylist:</strong> ${selectedStaff.name}</li>
+          <li><strong>Date:</strong> ${format(selectedDate, 'PPP')}</li>
+          <li><strong>Time:</strong> ${selectedTime}</li>
+          <li><strong>Price:</strong> GH₵${selectedService.price.toFixed(2)}</li>
+        </ul>
+        <p>We look forward to seeing you!</p>
+        <p><em>- The Shear Bliss Team</em></p>
+      `;
+    
       await sendEmail({
         to: data.email,
         subject: 'Your Shear Bliss Appointment Confirmation',
@@ -149,14 +161,12 @@ export default function BookingPage() {
       });
       router.push('/confirmation');
     } catch (error) {
-      console.error('Failed to send confirmation email:', error);
+      console.error('Failed to book or send email:', error);
       toast({
         variant: 'destructive',
-        title: 'Booking Confirmed, but...',
-        description: 'Your appointment was booked, but we could not send a confirmation email.',
+        title: 'Booking Failed',
+        description: 'We could not schedule your appointment or send a confirmation email. Please try again.',
       });
-       // Still redirect to confirmation, as the booking itself is "successful" for the user.
-      router.push('/confirmation');
     } finally {
       setIsSubmitting(false);
     }
@@ -221,7 +231,7 @@ export default function BookingPage() {
                       >
                         <CardContent className="p-4 text-center">
                           <h3 className="font-semibold">{service.name}</h3>
-                          <p className="text-sm text-primary">${service.price}</p>
+                          <p className="text-sm text-primary">GH₵{service.price}</p>
                         </CardContent>
                       </Card>
                     ))}
@@ -338,7 +348,7 @@ export default function BookingPage() {
                         </div>
                         <div className="flex justify-between text-lg font-bold text-primary pt-4 border-t">
                           <span>Total:</span>
-                          <span>${selectedService.price.toFixed(2)}</span>
+                          <span>GH₵{selectedService.price.toFixed(2)}</span>
                         </div>
                       </CardContent>
                     </Card>

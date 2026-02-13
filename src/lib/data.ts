@@ -1,8 +1,8 @@
 import { placeholderImages } from './placeholder-images';
 
-const getPlaceholderImageUrl = (id: string, fallbackSeed?: string) => {
+const getPlaceholderImageUrl = (id: string) => {
   const image = placeholderImages.find((img) => img.id === id);
-  return image?.imageUrl || `https://picsum.photos/seed/${fallbackSeed || id}/600/400`;
+  return image?.imageUrl || `https://picsum.photos/seed/${id}/600/400`;
 };
 
 
@@ -81,7 +81,7 @@ const services: Service[] = [
     description: 'Creation of a custom wig tailored to your specifications.',
     price: 300,
     duration: 240,
-    imageUrl: getPlaceholderImageUrl('ser-6', 'wig-making-generic'),
+    imageUrl: getPlaceholderImageUrl('ser-6'),
   },
   {
     id: 'ser-7',
@@ -89,7 +89,7 @@ const services: Service[] = [
     description: 'Professional fitting and styling of your wig for a flawless look.',
     price: 100,
     duration: 75,
-    imageUrl: getPlaceholderImageUrl('ser-7', 'wig-install-generic'),
+    imageUrl: getPlaceholderImageUrl('ser-7'),
   },
   {
     id: 'ser-8',
@@ -97,7 +97,7 @@ const services: Service[] = [
     description: 'Quick and stylish press-on nail application for any occasion.',
     price: 25,
     duration: 30,
-    imageUrl: getPlaceholderImageUrl('ser-8', 'press-on-generic'),
+    imageUrl: getPlaceholderImageUrl('ser-8'),
   },
   {
     id: 'ser-9',
@@ -105,7 +105,7 @@ const services: Service[] = [
     description: 'A quick nail shaping and fresh polish application.',
     price: 20,
     duration: 25,
-    imageUrl: getPlaceholderImageUrl('ser-9', 'polish-generic'),
+    imageUrl: getPlaceholderImageUrl('ser-9'),
   },
   {
     id: 'ser-10',
@@ -113,7 +113,7 @@ const services: Service[] = [
     description: 'Root touch-up to maintain your vibrant hair color.',
     price: 60,
     duration: 60,
-    imageUrl: getPlaceholderImageUrl('ser-10', 'color-touchup-generic'),
+    imageUrl: getPlaceholderImageUrl('ser-10'),
   },
   {
     id: 'ser-11',
@@ -121,7 +121,7 @@ const services: Service[] = [
     description: 'A professional and relaxing hair wash and conditioning.',
     price: 25,
     duration: 30,
-    imageUrl: getPlaceholderImageUrl('ser-11', 'hair-wash-generic'),
+    imageUrl: getPlaceholderImageUrl('ser-11'),
   },
   {
     id: 'ser-12',
@@ -129,7 +129,7 @@ const services: Service[] = [
     description: 'Get a perfectly sleek and stylish ponytail for a sophisticated look.',
     price: 55,
     duration: 45,
-    imageUrl: getPlaceholderImageUrl('ser-12', 'ponytail-generic'),
+    imageUrl: getPlaceholderImageUrl('ser-12'),
   },
   {
     id: 'ser-13',
@@ -137,7 +137,7 @@ const services: Service[] = [
     description: 'Classic and elegant finger wave styling for a timeless look.',
     price: 65,
     duration: 60,
-    imageUrl: getPlaceholderImageUrl('ser-13', 'finger-waves-generic'),
+    imageUrl: getPlaceholderImageUrl('ser-13'),
   },
   {
     id: 'ser-14',
@@ -145,7 +145,7 @@ const services: Service[] = [
     description: 'A silk press or flat iron service for beautifully straight hair.',
     price: 75,
     duration: 90,
-    imageUrl: getPlaceholderImageUrl('ser-14', 'straightening-generic'),
+    imageUrl: getPlaceholderImageUrl('ser-14'),
   },
   {
     id: 'ser-15',
@@ -153,7 +153,7 @@ const services: Service[] = [
     description: 'Professional eyebrow waxing to shape and define your brows.',
     price: 20,
     duration: 20,
-    imageUrl: getPlaceholderImageUrl('ser-15', 'waxing-generic'),
+    imageUrl: getPlaceholderImageUrl('ser-15'),
   },
   {
     id: 'ser-16',
@@ -161,7 +161,7 @@ const services: Service[] = [
     description: 'Safe and sterile body piercing service, including ears, nose, and more.',
     price: 40,
     duration: 20,
-    imageUrl: getPlaceholderImageUrl('ser-16', 'piercing-generic'),
+    imageUrl: getPlaceholderImageUrl('ser-16'),
   },
   {
     id: 'ser-17',
@@ -169,7 +169,7 @@ const services: Service[] = [
     description: 'A full set of classic eyelash extensions for a stunning look.',
     price: 120,
     duration: 120,
-    imageUrl: getPlaceholderImageUrl('ser-17', 'eyelash-generic'),
+    imageUrl: getPlaceholderImageUrl('ser-17'),
   },
   {
     id: 'ser-18',
@@ -177,7 +177,7 @@ const services: Service[] = [
     description: 'Transform your look with a vibrant, all-over color.',
     price: 150,
     duration: 120,
-    imageUrl: getPlaceholderImageUrl('ser-18', 'coloring-generic'),
+    imageUrl: getPlaceholderImageUrl('ser-18'),
   },
 ];
 

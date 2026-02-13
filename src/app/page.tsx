@@ -7,11 +7,11 @@ import { collection } from 'firebase/firestore';
 
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { placeholderImages } from '@/lib/placeholder-images';
 import { Rating } from '@/components/shared/rating';
 import { useCollection, useFirestore, useMemoFirebase } from '@/firebase';
 import { type Service, type Staff } from '@/lib/data';
 import { Skeleton } from '@/components/ui/skeleton';
+import { placeholderImages } from '@/lib/placeholder-images';
 
 export default function Home() {
   const firestore = useFirestore();
@@ -99,7 +99,7 @@ export default function Home() {
                     <h3 className="text-xl font-bold mb-2">{service.name}</h3>
                     <p className="text-muted-foreground mb-4">{service.description}</p>
                     <div className="flex justify-between items-center text-sm">
-                      <span className="font-semibold text-primary">${service.price}</span>
+                      <span className="font-semibold text-primary">GH₵{service.price}</span>
                       <span className="text-muted-foreground">{service.duration} min</span>
                     </div>
                   </CardContent>

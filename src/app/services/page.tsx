@@ -65,7 +65,7 @@ export default function ServicesPage() {
                     {service.description}
                   </p>
                   <div className="flex justify-between items-center text-md font-semibold">
-                    <span className="text-primary">${service.price.toFixed(2)}</span>
+                    <span className="text-primary">GH₵{service.price.toFixed(2)}</span>
                     <span className="text-muted-foreground">{service.duration} mins</span>
                   </div>
                 </CardContent>

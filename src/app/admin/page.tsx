@@ -272,7 +272,7 @@ function ServiceForm({
             name="price"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Price ($)</FormLabel>
+                <FormLabel>Price (GH₵)</FormLabel>
                 <FormControl>
                   <Input type="number" placeholder="e.g., 65" {...field} />
                 </FormControl>
@@ -513,7 +513,7 @@ export default function AdminPage() {
                     services.map((s) => (
                       <TableRow key={s.id}>
                         <TableCell className="font-medium">{s.name}</TableCell>
-                        <TableCell>${s.price.toFixed(2)}</TableCell>
+                        <TableCell>GH₵{s.price.toFixed(2)}</TableCell>
                         <TableCell>{s.duration} min</TableCell>
                         <TableCell className="text-right">
                           <Button variant="ghost" size="icon" onClick={() => setDialog({ type: 'edit', collection: 'services', item: s })}>

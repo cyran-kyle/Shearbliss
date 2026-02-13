@@ -43,6 +43,78 @@
       "imageHint": "wig making"
     },
     {
+      "id": "ser-7",
+      "description": "Wig Installation",
+      "imageUrl": "https://images.unsplash.com/photo-1621602735730-b6271c77f8a8?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwyfHx3aWclMjBpbnN0YWxsYXRpb258ZW58MHx8fHwxNzcxMDc5MjU3fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "wig install"
+    },
+    {
+      "id": "ser-8",
+      "description": "Press On Nails",
+      "imageUrl": "https://images.unsplash.com/photo-1610992015858-65f053535a3a?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwzfHxwcmVzcyUyMG9uJTIwbmFpbHMlMjBkYXJrJTIwc2tpbnxlbnwwfHx8fDE3NzEwNzkyODB8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "press-on nails"
+    },
+    {
+      "id": "ser-9",
+      "description": "Tidy and Polish",
+      "imageUrl": "https://images.unsplash.com/photo-1519415510239-55b08502d995?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxuYWlsJTIwcG9saXNoJTIwYXBwbGljYXRpb24lMjBkYXJrJTIwc2tpbnxlbnwwfHx8fDE3NzEwNzkzMTJ8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "nail polish"
+    },
+    {
+      "id": "ser-10",
+      "description": "Color Touch Up",
+      "imageUrl": "https://images.unsplash.com/photo-1599331882650-8d54a5b82216?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxoYWlyJTIwY29sb3IlMjB0b3VjaHVwJTIwZGFyayUyMHNraW58ZW58MHx8fHwxNzcxMDc5MzUwfDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "hair color"
+    },
+    {
+      "id": "ser-11",
+      "description": "Hair Wash",
+      "imageUrl": "https://images.unsplash.com/photo-1559524028-00a6a0b75939?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxoYWlyJTIwd2FzaCUyMGRhcmslMjBza2lufGVufDB8fHx8fDE3NzEwNzkzODF8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "hair wash"
+    },
+    {
+      "id": "ser-12",
+      "description": "Sleek Ponytail",
+      "imageUrl": "https://images.unsplash.com/photo-1623812803337-30807c453d86?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxzbGVlayUyMHBvbnl0YWlsJTIwZGFyayUyMHNraW58ZW58MHx8fHwxNzcxMDc5NDA2fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "sleek ponytail"
+    },
+    {
+      "id": "ser-13",
+      "description": "Finger Waves",
+      "imageUrl": "https://images.unsplash.com/photo-1623945229443-393189725f16?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxmaW5nZXIlMjB3YXZlcyUyMGhhaXIlMjBkYXJrJTIwc2tpbnxlbnwwfHx8fDE3NzEwNzk0NDF8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "finger waves"
+    },
+    {
+      "id": "ser-14",
+      "description": "Hair Straightening",
+      "imageUrl": "https://images.unsplash.com/photo-1605505791248-7bac951a84b5?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxoYWlyJTIwc3RyYWlnaHRlbmluZyUyMGRhcmslMjBza2lufGVufDB8fHx8fDE3NzEwNzk0Njl8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "hair straightening"
+    },
+    {
+      "id": "ser-15",
+      "description": "Waxing",
+      "imageUrl": "https://images.unsplash.com/photo-1580616474936-7483712d919a?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxleWVicm93JTIwd2F4aW5nJTIwZGFyayUyMHNraW58ZW58MHx8fHwxNzcxMDc5NTAyfDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "eyebrow waxing"
+    },
+    {
+      "id": "ser-16",
+      "description": "Body Piercing",
+      "imageUrl": "https://images.unsplash.com/photo-1616196906297-f655a6a63c87?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxlYXIlMjBwaWVyY2luZyUyMGRhcmslMjBza2lufGVufDB8fHx8fDE3NzEwNzk1MzB8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "ear piercing"
+    },
+    {
+      "id": "ser-17",
+      "description": "Eyelash Extension",
+      "imageUrl": "https://images.unsplash.com/photo-1596728073341-3183a840d86c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxleWVsYXNoJTIwZXh0ZW5zaW9uJTIwZGFyayUyMHNraW58ZW58MHx8fHwxNzcxMDc5NTU4fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "eyelash extension"
+    },
+    {
+      "id": "ser-18",
+      "description": "Hair Coloring",
+      "imageUrl": "https://images.unsplash.com/photo-1643185365516-39a489745778?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxoYWlyJTIwY29sb3JpbmclMjBkYXJrJTIwc2tpbnxlbnwwfHx8fDE3NzEwNzk1ODd8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "hair coloring"
+    },
+    {
       "id": "staff-1",
       "description": "Portrait of Olivia Chen.",
       "imageUrl": "https://images.unsplash.com/photo-1711954244044-45f18daa839f?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw4fHxzdHlsaXN0JTIwZGFyayUyMHNraW58ZW58MHx8fHwxNzcwOTg5NTY2fDA&ixlib=rb-4.1.0&q=80&w=1080",
