@@ -141,7 +141,7 @@ const services: Service[] = [
   },
   {
     id: 'ser-14',
-    name: 'Staighting of Hair',
+    name: 'Straightening of Hair',
     description: 'A silk press or flat iron service for beautifully straight hair.',
     price: 75,
     duration: 90,
@@ -165,7 +165,7 @@ const services: Service[] = [
   },
   {
     id: 'ser-17',
-    name: 'Eye Lush Extension',
+    name: 'Eyelash Extension',
     description: 'A full set of classic eyelash extensions for a stunning look.',
     price: 120,
     duration: 120,

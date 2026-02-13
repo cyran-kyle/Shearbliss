@@ -345,7 +345,6 @@ export default function AdminPage() {
   const { toast } = useToast();
   
   const [staffSeeded, setStaffSeeded] = useState(false);
-  const [servicesSeeded, setServicesSeeded] = useState(false);
 
   // State for dialogs
   const [dialog, setDialog] = useState<{ type: 'add' | 'edit' | 'delete', collection: 'staff' | 'services', item?: any } | null>(null);
@@ -371,17 +370,16 @@ export default function AdminPage() {
     }
   }, [staff, staffLoading, staffSeeded, firestore, staticStaff, staffCollection]);
   
-  // Seed services data to ensure it's up to date
+  // Always synchronize services from code to Firestore on admin page load
   useEffect(() => {
-    if (firestore && servicesCollection && !servicesLoading && !servicesSeeded) {
+    if (firestore) {
       console.log('Updating services to latest version...');
       staticServices.forEach(s => {
         const docRef = doc(firestore, 'services', s.id);
         setDocumentNonBlocking(docRef, s, { merge: true });
       });
-      setServicesSeeded(true);
     }
-  }, [services, servicesLoading, servicesSeeded, firestore, staticServices, servicesCollection]);
+  }, [firestore, staticServices]);
 
 
   useEffect(() => {
