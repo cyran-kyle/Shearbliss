@@ -38,7 +38,7 @@ const services: Service[] = [
   {
     id: 'ser-1',
     name: 'Hair Treatment',
-    description: 'A revitalizing treatment to nourish and restore your hair\'s health and shine.',
+    description: "A revitalizing treatment to nourish and restore your hair's health and shine.",
     price: 50,
     duration: 45,
     imageUrl: getPlaceholderImageUrl('ser-1'),
@@ -109,7 +109,7 @@ const services: Service[] = [
   },
   {
     id: 'ser-10',
-    name: 'Color Touch Up',
+    name: 'Color Touch-up',
     description: 'Root touch-up to maintain your vibrant hair color.',
     price: 60,
     duration: 60,
@@ -117,7 +117,7 @@ const services: Service[] = [
   },
   {
     id: 'ser-11',
-    name: 'Hair Wash',
+    name: 'Hair Washing',
     description: 'A professional and relaxing hair wash and conditioning.',
     price: 25,
     duration: 30,
@@ -157,7 +157,7 @@ const services: Service[] = [
   },
   {
     id: 'ser-16',
-    name: 'Body Piercing',
+    name: 'Full Body Piercing',
     description: 'Safe and sterile body piercing service, including ears, nose, and more.',
     price: 40,
     duration: 20,
