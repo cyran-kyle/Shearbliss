@@ -3,67 +3,67 @@
     {
       "id": "hero-1",
       "description": "Elegant and modern hair salon with a client.",
-      "imageUrl": "https://images.unsplash.com/photo-1600984594658-545a9b833207?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxoYWlyJTIwc2Fsb24lMjBibGFjayUyMHdvbWFufGVufDB8fHx8fDE3MDc4MTA3NTJ8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "https://images.unsplash.com/photo-1668723023737-304db703f128?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw4fHxzYWxvbiUyMGRhcmslMjBza2lufGVufDB8fHx8MTc3MDk4OTU2Nnww&ixlib=rb-4.1.0&q=80&w=1080",
       "imageHint": "salon dark skin"
     },
     {
       "id": "ser-1",
       "description": "Hair Treatment",
-      "imageUrl": "https://images.unsplash.com/photo-1620921027722-3482a25a94e8?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwyfHxhZnJvJTIwaGFpciUyMHRyZWF0bWVudHxlbnwwfHx8fDE3MDc4MDk2NDV8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "https://images.unsplash.com/photo-1515377905703-c4788e51af15?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwzfHxoYWlyJTIwdHJlYXRtZW50fGVufDB8fHx8MTc3MDk4OTU2N3ww&ixlib=rb-4.1.0&q=80&w=1080",
       "imageHint": "hair treatment"
     },
     {
       "id": "ser-2",
       "description": "Pedicure",
-      "imageUrl": "https://images.unsplash.com/photo-1617329188041-3b95b8a4f6a9?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxwZWRpY3VyZSUyMGJsYWNrJTIwd29tYW58ZW58MHx8fHwxNzA3ODA5NzAxfDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "https://images.unsplash.com/photo-1761001312550-b1ee02221308?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwzfHxwZWRpY3VyZSUyMGRhcmslMjBza2lufGVufDB8fHx8MTc3MDk4OTU2Nnww&ixlib=rb-4.1.0&q=80&w=1080",
       "imageHint": "pedicure dark skin"
     },
     {
       "id": "ser-3",
       "description": "Manicure",
-      "imageUrl": "https://images.unsplash.com/photo-1604654894610-df6231343542?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxtYW5pY3VyZSUyMGRhcmslMjBza2lufGVufDB8fHx8MTcwNzgwOTczN3ww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "https://images.unsplash.com/photo-1697534538975-cc0254e908fd?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxtYW5pY3VyZSUyMGRhcmslMjBza2lufGVufDB8fHx8MTc3MDk4OTU2Nnww&ixlib=rb-4.1.0&q=80&w=1080",
       "imageHint": "manicure dark skin"
     },
     {
       "id": "ser-4",
       "description": "Acrylic Nails",
-      "imageUrl": "https://images.unsplash.com/photo-1610991334499-913b8a342654?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwzfHxhY3J5bGljJTIwbmFpbHMlMjBkYXJrJTIwc2tpbnxlbnwwfHx8fDE3MDc4MDk4MTB8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "https://images.unsplash.com/photo-1645566373617-866af9e5c599?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwzfHxhY3J5bGljJTIwbmFpbHN8ZW58MHx8fHwxNzcwOTg5NTY2fDA&ixlib=rb-4.1.0&q=80&w=1080",
       "imageHint": "acrylic nails"
     },
     {
       "id": "ser-5",
       "description": "Facial Treatment",
-      "imageUrl": "https://images.unsplash.com/photo-1597902996162-386f6a7353b3?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwzfHxmYWNpYWwlMjB0cmVhdG1lbnQlMjBibGFjayUyMHdvbWFufGVufDB8fHx8MTcwNzgwOTg0Mnww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "https://images.unsplash.com/photo-1603208636259-4bf3d6589c63?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwyfHxmYWNpYWwlMjBkYXJrJTIwc2tpbnxlbnwwfHx8fDE3NzA5ODk1NjZ8MA&ixlib=rb-4.1.0&q=80&w=1080",
       "imageHint": "facial dark skin"
     },
     {
       "id": "ser-6",
       "description": "Wig Making",
-      "imageUrl": "https://images.unsplash.com/photo-1596767352399-2c77b4515c0a?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHx3aWclMjBtYWtpbmd8ZW58MHx8fHwxNzA3ODA5ODg2fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "https://images.unsplash.com/photo-1699787150873-c6b8fb3dc1f3?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHx3aWclMjBtYWtpbmd8ZW58MHx8fHwxNzcwOTg5NTY2fDA&ixlib=rb-4.1.0&q=80&w=1080",
       "imageHint": "wig making"
     },
     {
       "id": "staff-1",
       "description": "Portrait of Olivia Chen.",
-      "imageUrl": "https://images.unsplash.com/photo-1624561172888-ac93c690e10c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxoYWlyZHJlc3NlciUyMHBvcnRyYWl0JTIwYmxhY2slMjB3b21hbnxlbnwwfHx8fDE3MDc4MTA1MjR8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "https://images.unsplash.com/photo-1711954244044-45f18daa839f?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw4fHxzdHlsaXN0JTIwZGFyayUyMHNraW58ZW58MHx8fHwxNzcwOTg5NTY2fDA&ixlib=rb-4.1.0&q=80&w=1080",
       "imageHint": "stylist dark skin"
     },
     {
       "id": "staff-2",
       "description": "Portrait of Benjamin Carter.",
-      "imageUrl": "https://images.unsplash.com/photo-1614283332194-275a7c2b3f15?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxiYXJiZXIlMjBwb3J0cmFpdCUyMGJsYWNrJTIwbWFufGVufDB8fHx8MTcwNzgxMDU3N3ww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "https://images.unsplash.com/photo-1643898804248-1239ef388ee9?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw3fHxiYXJiZXIlMjBkYXJrJTIwc2tpbnxlbnwwfHx8fDE3NzA5ODk1NjZ8MA&ixlib=rb-4.1.0&q=80&w=1080",
       "imageHint": "barber dark skin"
     },
     {
       "id": "staff-3",
       "description": "Portrait of Sophia Rodriguez.",
-      "imageUrl": "https://images.unsplash.com/photo-1622286462520-a6a3b94a8e26?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwyfHxoYWlyZHJlc3NlciUyMHBvcnRyYWl0JTIwYmxhY2slMjB3b21hbnxlbnwwfHx8fDE3MDc4MTA1MjR8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "https://images.unsplash.com/photo-1711954244044-45f18daa839f?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw4fHxzdHlsaXN0JTIwZGFyayUyMHNraW58ZW58MHx8fHwxNzcwOTg5NTY2fDA&ixlib=rb-4.1.0&q=80&w=1080",
       "imageHint": "stylist dark skin"
     },
     {
       "id": "staff-4",
       "description": "Portrait of Liam Goldberg.",
-      "imageUrl": "https://images.unsplash.com/photo-1533327325824-76bc4e62d560?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwyfHxiYXJiZXIlMjBwb3J0cmFpdCUyMGJsYWNrJTIwbWFufGVufDB8fHx8fDE3MDc4MTA1Nzd8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "https://images.unsplash.com/photo-1742157574049-4df3bc760926?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw4fHxiYXJiZXIlMjBkYXJrJTIwc2tpbnxlbnwwfHx8fDE3NzA5ODk1NjZ8MA&ixlib=rb-4.1.0&q=80&w=1080",
       "imageHint": "barber dark skin"
     }
   ]
