@@ -6,18 +6,20 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import { Star, User, MessageSquare, PlusCircle } from 'lucide-react';
+import { collection } from 'firebase/firestore';
 
-import { getStaff, type Staff as StaffType, type StaffReview } from '@/lib/data';
+import { type Staff as StaffType } from '@/lib/data';
+import { useCollection, useFirestore, useMemoFirebase } from '@/firebase';
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
 } from '@/components/ui/accordion';
-import { Card, CardContent } from '@/components/ui/card';
+import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Rating } from '@/components/shared/rating';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import {
   Dialog,
   DialogContent,
@@ -38,6 +40,7 @@ import {
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
+import { Skeleton } from '@/components/ui/skeleton';
 
 const reviewSchema = z.object({
   name: z.string().min(2, { message: 'Name must be at least 2 characters.' }),
@@ -122,7 +125,9 @@ function AddReviewForm({ staffId, onReviewAdded }: { staffId: string; onReviewAd
 }
 
 export default function StaffPage() {
-  const staffMembers = getStaff();
+  const firestore = useFirestore();
+  const staffCollection = useMemoFirebase(() => (firestore ? collection(firestore, 'staff') : null), [firestore]);
+  const { data: staffMembers, isLoading } = useCollection<StaffType>(staffCollection);
   const [openDialogs, setOpenDialogs] = useState<Record<string, boolean>>({});
 
   const handleReviewAdded = (staffId: string) => {
@@ -139,75 +144,90 @@ export default function StaffPage() {
           </p>
         </div>
         <Accordion type="single" collapsible className="w-full space-y-4">
-          {staffMembers.map((staff) => (
-            <AccordionItem value={staff.id} key={staff.id} className="border-none">
-              <Card className="overflow-hidden shadow-md transition-shadow hover:shadow-xl">
-                <AccordionTrigger className="w-full p-6 text-left hover:no-underline [&[data-state=open]>svg]:text-primary">
-                  <div className="flex gap-6 items-center w-full">
-                    <div className="relative h-24 w-24 shrink-0 rounded-full overflow-hidden ring-2 ring-primary/20">
-                      <Image
-                        src={staff.imageUrl}
-                        alt={staff.name}
-                        fill
-                        className="object-cover"
-                        data-ai-hint="stylist portrait"
-                      />
-                    </div>
+          {isLoading ? (
+            [...Array(4)].map((_, i) => (
+              <Card key={i} className="overflow-hidden shadow-md">
+                 <div className="flex gap-6 items-center w-full p-6">
+                    <Skeleton className="h-24 w-24 shrink-0 rounded-full" />
                     <div className="flex-grow">
-                      <h2 className="text-2xl font-bold">{staff.name}</h2>
-                      <p className="text-primary font-semibold">{staff.specialization}</p>
-                      <div className="flex items-center gap-2 mt-1">
-                        <Rating rating={staff.rating} />
-                        <span className="text-sm text-muted-foreground">({staff.reviewCount} reviews)</span>
-                      </div>
+                        <Skeleton className="h-7 w-1/2 mb-2" />
+                        <Skeleton className="h-5 w-1/3 mb-2" />
+                        <Skeleton className="h-5 w-1/4" />
                     </div>
-                  </div>
-                </AccordionTrigger>
-                <AccordionContent>
-                  <div className="p-6 pt-0">
-                    <div className="border-t pt-6">
-                      <div className="flex justify-between items-center mb-4">
-                        <h3 className="text-lg font-semibold">Client Reviews</h3>
-                        <Dialog open={openDialogs[staff.id] || false} onOpenChange={(isOpen) => setOpenDialogs(prev => ({ ...prev, [staff.id]: isOpen }))}>
-                          <DialogTrigger asChild>
-                            <Button variant="outline" size="sm">
-                              <PlusCircle className="mr-2 h-4 w-4" /> Add Review
-                            </Button>
-                          </DialogTrigger>
-                          <DialogContent>
-                            <DialogHeader>
-                              <DialogTitle>Review {staff.name}</DialogTitle>
-                              <DialogDescription>Share your experience with us.</DialogDescription>
-                            </DialogHeader>
-                            <AddReviewForm staffId={staff.id} onReviewAdded={() => handleReviewAdded(staff.id)} />
-                          </DialogContent>
-                        </Dialog>
-                      </div>
-                      <div className="space-y-4 max-h-60 overflow-y-auto pr-2">
-                        {staff.reviews.length > 0 ? staff.reviews.map((review) => (
-                          <div key={review.id} className="flex gap-4">
-                            <Avatar>
-                              <AvatarFallback>{review.userName.charAt(0)}</AvatarFallback>
-                            </Avatar>
-                            <div className="flex-grow">
-                              <div className="flex items-center justify-between">
-                                <p className="font-semibold">{review.userName}</p>
-                                <span className="text-xs text-muted-foreground">{review.createdAt}</span>
-                              </div>
-                              <Rating rating={review.rating} className="my-1" />
-                              <p className="text-sm text-muted-foreground">{review.comment}</p>
-                            </div>
-                          </div>
-                        )) : (
-                          <p className="text-sm text-muted-foreground text-center py-4">Be the first to review {staff.name}!</p>
-                        )}
-                      </div>
-                    </div>
-                  </div>
-                </AccordionContent>
+                 </div>
               </Card>
-            </AccordionItem>
-          ))}
+           ))
+          ) : (
+            staffMembers?.map((staff) => (
+              <AccordionItem value={staff.id} key={staff.id} className="border-none">
+                <Card className="overflow-hidden shadow-md transition-shadow hover:shadow-xl">
+                  <AccordionTrigger className="w-full p-6 text-left hover:no-underline [&[data-state=open]>svg]:text-primary">
+                    <div className="flex gap-6 items-center w-full">
+                      <div className="relative h-24 w-24 shrink-0 rounded-full overflow-hidden ring-2 ring-primary/20">
+                        <Image
+                          src={staff.imageUrl}
+                          alt={staff.name}
+                          fill
+                          className="object-cover"
+                          data-ai-hint="stylist portrait"
+                        />
+                      </div>
+                      <div className="flex-grow">
+                        <h2 className="text-2xl font-bold">{staff.name}</h2>
+                        <p className="text-primary font-semibold">{staff.specialization}</p>
+                        <div className="flex items-center gap-2 mt-1">
+                          <Rating rating={staff.rating} />
+                          <span className="text-sm text-muted-foreground">({staff.reviewCount} reviews)</span>
+                        </div>
+                      </div>
+                    </div>
+                  </AccordionTrigger>
+                  <AccordionContent>
+                    <div className="p-6 pt-0">
+                      <div className="border-t pt-6">
+                        <div className="flex justify-between items-center mb-4">
+                          <h3 className="text-lg font-semibold">Client Reviews</h3>
+                          <Dialog open={openDialogs[staff.id] || false} onOpenChange={(isOpen) => setOpenDialogs(prev => ({ ...prev, [staff.id]: isOpen }))}>
+                            <DialogTrigger asChild>
+                              <Button variant="outline" size="sm">
+                                <PlusCircle className="mr-2 h-4 w-4" /> Add Review
+                              </Button>
+                            </DialogTrigger>
+                            <DialogContent>
+                              <DialogHeader>
+                                <DialogTitle>Review {staff.name}</DialogTitle>
+                                <DialogDescription>Share your experience with us.</DialogDescription>
+                              </DialogHeader>
+                              <AddReviewForm staffId={staff.id} onReviewAdded={() => handleReviewAdded(staff.id)} />
+                            </DialogContent>
+                          </Dialog>
+                        </div>
+                        <div className="space-y-4 max-h-60 overflow-y-auto pr-2">
+                          {staff.reviews.length > 0 ? staff.reviews.map((review) => (
+                            <div key={review.id} className="flex gap-4">
+                              <Avatar>
+                                <AvatarFallback>{review.userName.charAt(0)}</AvatarFallback>
+                              </Avatar>
+                              <div className="flex-grow">
+                                <div className="flex items-center justify-between">
+                                  <p className="font-semibold">{review.userName}</p>
+                                  <span className="text-xs text-muted-foreground">{review.createdAt}</span>
+                                </div>
+                                <Rating rating={review.rating} className="my-1" />
+                                <p className="text-sm text-muted-foreground">{review.comment}</p>
+                              </div>
+                            </div>
+                          )) : (
+                            <p className="text-sm text-muted-foreground text-center py-4">Be the first to review {staff.name}!</p>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  </AccordionContent>
+                </Card>
+              </AccordionItem>
+            ))
+          )}
         </Accordion>
       </div>
     </div>

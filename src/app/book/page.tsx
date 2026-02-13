@@ -18,18 +18,20 @@ import {
   Mail,
 } from 'lucide-react';
 import { format } from 'date-fns';
+import { collection } from 'firebase/firestore';
 
 import { cn } from '@/lib/utils';
-import { getServices, getStaff, type Service, type Staff } from '@/lib/data';
+import { type Service, type Staff } from '@/lib/data';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Calendar } from '@/components/ui/calendar';
 import { useToast } from '@/hooks/use-toast';
 import { Rating } from '@/components/shared/rating';
-import { useUser } from '@/firebase';
+import { useUser, useCollection, useFirestore, useMemoFirebase } from '@/firebase';
 import { sendEmail } from '@/ai/flows/send-email-flow';
 import { FormField, FormItem, FormLabel, FormControl, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
+import { Skeleton } from '@/components/ui/skeleton';
 
 const bookingSchema = z.object({
   service: z.string().min(1, 'Please select a service.'),
@@ -52,8 +54,13 @@ export default function BookingPage() {
   const [step, setStep] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const services = getServices();
-  const staffMembers = getStaff();
+  const firestore = useFirestore();
+
+  const servicesCollection = useMemoFirebase(() => (firestore ? collection(firestore, 'services') : null), [firestore]);
+  const { data: services, isLoading: servicesLoading } = useCollection<Service>(servicesCollection);
+
+  const staffCollection = useMemoFirebase(() => (firestore ? collection(firestore, 'staff') : null), [firestore]);
+  const { data: staffMembers, isLoading: staffLoading } = useCollection<Staff>(staffCollection);
 
   const methods = useForm<z.infer<typeof bookingSchema>>({
     resolver: zodResolver(bookingSchema),
@@ -80,8 +87,8 @@ export default function BookingPage() {
   const selectedDate = watch('date');
   const selectedTime = watch('time');
 
-  const selectedService = services.find(s => s.id === selectedServiceId);
-  const selectedStaff = staffMembers.find(s => s.id === selectedStaffId);
+  const selectedService = services?.find(s => s.id === selectedServiceId);
+  const selectedStaff = staffMembers?.find(s => s.id === selectedStaffId);
 
   const handleNextStep = async () => {
     let isValid = false;
@@ -195,8 +202,15 @@ export default function BookingPage() {
               </CardHeader>
               <CardContent className="min-h-[300px]">
                 {step === 1 && (
+                  servicesLoading ? (
+                    <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                      {[...Array(6)].map((_, i) => (
+                        <Card key={i}><CardContent className="p-4"><Skeleton className="h-12 w-full"/></CardContent></Card>
+                      ))}
+                    </div>
+                  ) : (
                   <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                    {services.map(service => (
+                    {services?.map(service => (
                       <Card
                         key={service.id}
                         className={cn(
@@ -212,10 +226,18 @@ export default function BookingPage() {
                       </Card>
                     ))}
                   </div>
+                  )
                 )}
                 {step === 2 && (
+                   staffLoading ? (
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                      {[...Array(4)].map((_, i) => (
+                         <Card key={i}><CardContent className="p-4"><Skeleton className="h-32 w-full"/></CardContent></Card>
+                      ))}
+                    </div>
+                  ) : (
                   <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                    {staffMembers.map(staff => (
+                    {staffMembers?.map(staff => (
                       <Card
                         key={staff.id}
                         className={cn(
@@ -232,6 +254,7 @@ export default function BookingPage() {
                       </Card>
                     ))}
                   </div>
+                  )
                 )}
                 {step === 3 && (
                    <div className="grid md:grid-cols-2 gap-8">

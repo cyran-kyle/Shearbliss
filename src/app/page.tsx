@@ -1,16 +1,29 @@
+'use client';
+
 import Image from 'next/image';
 import Link from 'next/link';
 import { ArrowRight, Scissors, Sparkles, Users } from 'lucide-react';
+import { collection } from 'firebase/firestore';
 
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { placeholderImages } from '@/lib/placeholder-images';
-import { getServices, getStaff } from '@/lib/data';
 import { Rating } from '@/components/shared/rating';
+import { useCollection, useFirestore, useMemoFirebase } from '@/firebase';
+import { type Service, type Staff } from '@/lib/data';
+import { Skeleton } from '@/components/ui/skeleton';
 
 export default function Home() {
-  const featuredServices = getServices().slice(0, 3);
-  const featuredStaff = getStaff().slice(0, 3);
+  const firestore = useFirestore();
+
+  const servicesCollection = useMemoFirebase(() => (firestore ? collection(firestore, 'services') : null), [firestore]);
+  const { data: services, isLoading: servicesLoading } = useCollection<Service>(servicesCollection);
+
+  const staffCollection = useMemoFirebase(() => (firestore ? collection(firestore, 'staff') : null), [firestore]);
+  const { data: staff, isLoading: staffLoading } = useCollection<Staff>(staffCollection);
+  
+  const featuredServices = services ? services.slice(0, 3) : [];
+  const featuredStaff = staff ? staff.slice(0, 3) : [];
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -48,29 +61,45 @@ export default function Home() {
             </p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {featuredServices.map((service) => (
-              <Card key={service.id} className="overflow-hidden transform hover:-translate-y-2 transition-transform duration-300 ease-in-out shadow-lg hover:shadow-2xl">
-                <CardHeader className="p-0">
-                  <div className="relative h-48 w-full">
-                    <Image
-                      src={service.imageUrl}
-                      alt={service.name}
-                      fill
-                      className="object-cover"
-                      data-ai-hint="hair service"
-                    />
-                  </div>
-                </CardHeader>
-                <CardContent className="p-6">
-                  <h3 className="text-xl font-bold mb-2">{service.name}</h3>
-                  <p className="text-muted-foreground mb-4">{service.description}</p>
-                  <div className="flex justify-between items-center text-sm">
-                    <span className="font-semibold text-primary">${service.price}</span>
-                    <span className="text-muted-foreground">{service.duration} min</span>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
+            {servicesLoading ? (
+              [...Array(3)].map((_, i) => (
+                <Card key={i} className="overflow-hidden">
+                  <Skeleton className="h-48 w-full" />
+                  <CardContent className="p-6">
+                    <Skeleton className="h-6 w-3/4 mb-2" />
+                    <Skeleton className="h-4 w-full mb-4" />
+                    <div className="flex justify-between items-center">
+                      <Skeleton className="h-5 w-1/4" />
+                      <Skeleton className="h-5 w-1/4" />
+                    </div>
+                  </CardContent>
+                </Card>
+              ))
+            ) : (
+              featuredServices.map((service) => (
+                <Card key={service.id} className="overflow-hidden transform hover:-translate-y-2 transition-transform duration-300 ease-in-out shadow-lg hover:shadow-2xl">
+                  <CardHeader className="p-0">
+                    <div className="relative h-48 w-full">
+                      <Image
+                        src={service.imageUrl}
+                        alt={service.name}
+                        fill
+                        className="object-cover"
+                        data-ai-hint="hair service"
+                      />
+                    </div>
+                  </CardHeader>
+                  <CardContent className="p-6">
+                    <h3 className="text-xl font-bold mb-2">{service.name}</h3>
+                    <p className="text-muted-foreground mb-4">{service.description}</p>
+                    <div className="flex justify-between items-center text-sm">
+                      <span className="font-semibold text-primary">${service.price}</span>
+                      <span className="text-muted-foreground">{service.duration} min</span>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))
+            )}
           </div>
           <div className="text-center mt-12">
             <Button asChild variant="outline">
@@ -91,27 +120,40 @@ export default function Home() {
             </p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {featuredStaff.map((staff) => (
-              <Card key={staff.id} className="text-center group overflow-hidden transform hover:-translate-y-2 transition-transform duration-300 ease-in-out shadow-lg hover:shadow-2xl">
-                <CardContent className="p-6">
-                  <div className="relative h-32 w-32 rounded-full mx-auto mb-4 overflow-hidden ring-4 ring-primary/20 group-hover:ring-primary/40 transition-all">
-                    <Image
-                      src={staff.imageUrl}
-                      alt={staff.name}
-                      fill
-                      className="object-cover"
-                      data-ai-hint="stylist portrait"
-                    />
-                  </div>
-                  <h3 className="text-xl font-bold">{staff.name}</h3>
-                  <p className="text-primary font-medium">{staff.specialization}</p>
-                  <div className="flex justify-center my-2">
-                    <Rating rating={staff.rating} />
-                  </div>
-                  <p className="text-sm text-muted-foreground">{staff.experience} of experience</p>
-                </CardContent>
-              </Card>
-            ))}
+            {staffLoading ? (
+              [...Array(3)].map((_, i) => (
+                <Card key={i} className="text-center group overflow-hidden">
+                  <CardContent className="p-6">
+                    <Skeleton className="h-32 w-32 rounded-full mx-auto mb-4" />
+                    <Skeleton className="h-6 w-3/4 mx-auto mb-2" />
+                    <Skeleton className="h-5 w-1/2 mx-auto mb-2" />
+                    <Skeleton className="h-4 w-1/4 mx-auto" />
+                  </CardContent>
+                </Card>
+              ))
+            ) : (
+              featuredStaff.map((staff) => (
+                <Card key={staff.id} className="text-center group overflow-hidden transform hover:-translate-y-2 transition-transform duration-300 ease-in-out shadow-lg hover:shadow-2xl">
+                  <CardContent className="p-6">
+                    <div className="relative h-32 w-32 rounded-full mx-auto mb-4 overflow-hidden ring-4 ring-primary/20 group-hover:ring-primary/40 transition-all">
+                      <Image
+                        src={staff.imageUrl}
+                        alt={staff.name}
+                        fill
+                        className="object-cover"
+                        data-ai-hint="stylist portrait"
+                      />
+                    </div>
+                    <h3 className="text-xl font-bold">{staff.name}</h3>
+                    <p className="text-primary font-medium">{staff.specialization}</p>
+                    <div className="flex justify-center my-2">
+                      <Rating rating={staff.rating} />
+                    </div>
+                    <p className="text-sm text-muted-foreground">{staff.experience} of experience</p>
+                  </CardContent>
+                </Card>
+              ))
+            )}
           </div>
           <div className="text-center mt-12">
             <Button asChild variant="outline">
